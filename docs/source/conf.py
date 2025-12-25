@@ -13,7 +13,9 @@ author = 'Casey McGrath'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["myst_parser"]
+extensions = ["myst_parser",      # https://myst-parser.readthedocs.io/en/latest/intro.html
+"sphinxcontrib.bibtex"            # https://sphinxcontrib-bibtex.readthedocs.io/en/latest/quickstart.html
+]
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -32,3 +34,7 @@ html_theme_options = {
     "repository_url": "https://github.com/CaseyMcGrath/The-MCMC-Cookbook",
     "use_repository_button": True,
 }
+
+
+
+bibtex_bibfiles = ['references.bib']
