@@ -1,7 +1,6 @@
 
 
-Recipes for Crafting MCMCs
-==========================
+# Recipes for Crafting MCMCs
 
 When I first began my journey into the world of Markov Chain Monte Carlo (MCMC) samplers (in graduate school), I used a pre-built sampler.  I downloaded it from github and learned how to use it through a combination of practice on toy problems and reading through the documentation.  And then I tried to use it to solve the very specific problem for my research.  I suspect that many people begin their own MCMC journeys in a similar way.
 
@@ -20,8 +19,18 @@ But after I spent over a decade of banging my head against my computer and reach
 So that is the purpose of this cookbook: to develop from scratch MCMC samplers for various problems, to learn about different ingredients that often go into different MCMC samplers, and to learn which ingredients to add into your MCMC depending on the problem you want to solve.  That way, hopefully, you can learn to build your own recipe and cook exactly the MCMC that you need!
 
 
+## Goals of The Cookbook
+
+1. Simplify the mathematical notation to make it easier to understand.
+
+2. Build intuition for how a MCMC sampler must work, and the order of the steps it must take to successfully propose, draw, and reject samples.
+
+3. Develop individual "ingredients" that can go into an MCMC sampler, and understand how to build a recipe out of them.
 
 
+
+
+## Table of Contents
 
 ```{toctree}
 :maxdepth: 2
