@@ -14,7 +14,8 @@ author = 'Casey McGrath'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = ["myst_parser",      # https://myst-parser.readthedocs.io/en/latest/intro.html
-"sphinxcontrib.bibtex"            # https://sphinxcontrib-bibtex.readthedocs.io/en/latest/quickstart.html
+"sphinxcontrib.bibtex",           # https://sphinxcontrib-bibtex.readthedocs.io/en/latest/quickstart.html
+"sphinx_design"                   # https://myst-parser.readthedocs.io/en/latest/intro.html#extending-sphinx
 ]
 
 templates_path = ['_templates']

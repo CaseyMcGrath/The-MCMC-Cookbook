@@ -19,7 +19,7 @@ But after I spent over a decade of banging my head against my computer and reach
 So that is the purpose of this cookbook: to develop from scratch MCMC samplers for various problems, to learn about different ingredients that often go into different MCMC samplers, and to learn which ingredients to add into your MCMC depending on the problem you want to solve.  That way, hopefully, you can learn to build your own recipe and cook exactly the MCMC that you need!
 
 
-## Goals of The Cookbook
+## Goals of The MCMC Cookbook
 
 1. Simplify the mathematical notation to make it easier to understand.
 
@@ -32,7 +32,7 @@ So that is the purpose of this cookbook: to develop from scratch MCMC samplers f
 
 ## Before You Begin!
 
-Before you begin working through **The MCMC Cookbook**, I strongly recommend you first work through all of the exercises in *Data Analysis Recipes: Using Markov Chain Monte Carlo* by {cite:t}`Hogg_2018`.  This is an excellent resource that similarly sets the goal of actually teaching how to construct MCMC algorithms.  And personally I often find it is good to read through multiple different explanations of the same subject.  Different people explain things in different ways, and sometimes hearing a different explanation will help a concept click!  My good friend gave this to me as a homework assignment to work through, so I'm passing it along here as well.  Do your best on the exercises, give them an attempt, then come back to this resource!
+Before you begin working through **The MCMC Cookbook**, I strongly recommend you first work through all of the exercises in *Data Analysis Recipes: Using Markov Chain Monte Carlo* by {cite:t}`Hogg_2018`.  This is an excellent resource that similarly sets the goal of actually teaching how to construct MCMC algorithms from scratch.  And personally I often find it is good to read through multiple different explanations of the same subject.  Different people explain things in different ways, and sometimes hearing a different explanation will help a concept click!  My good friend gave this to me as a homework assignment to work through, so I'm passing it along here to you as well.  Do your best on the exercises, give them an attempt, then come back to this resource!
 
 
 
@@ -43,7 +43,7 @@ Before you begin working through **The MCMC Cookbook**, I strongly recommend you
 :maxdepth: 2
 :caption: Contents:
 
-sections/
+sections/ingredients
 ```
 
 
