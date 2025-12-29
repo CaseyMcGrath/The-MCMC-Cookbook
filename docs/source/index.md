@@ -34,16 +34,19 @@ So that is the purpose of this cookbook: to develop from scratch MCMC samplers f
 
 Before you begin working through **The MCMC Cookbook**, I strongly recommend you first work through all of the exercises in *Data Analysis Recipes: Using Markov Chain Monte Carlo* by {cite:t}`Hogg_2018`.  This is an excellent resource that similarly sets the goal of actually teaching how to construct MCMC algorithms from scratch.  And personally I often find it is good to read through multiple different explanations of the same subject.  Different people explain things in different ways, and sometimes hearing a different explanation will help a concept click!  My good friend gave this to me as a homework assignment to work through, so I'm passing it along here to you as well.  Do your best on the exercises, give them an attempt, then come back to this resource!
 
+```{bibliography}
+```
 
 
 
 ## Table of Contents
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 :caption: Contents:
 
 sections/ingredients
+sections/numpy_v_scipy
 ```
 
 
@@ -51,5 +54,3 @@ sections/ingredients
 
 
 
-```{bibliography}
-```
