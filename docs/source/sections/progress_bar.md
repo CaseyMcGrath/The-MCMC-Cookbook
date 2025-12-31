@@ -1,6 +1,6 @@
 # Convenience: Progress Tracking Bar
 
-Ok this is probably more of a public service announcement than anything else!  For a long time I did not know about the *TQDM* python package, but I wish I had!  You can easily plug it into your code where you might want some kind of progress tracker - something that I just like to have for my MCMCs as a convencience!  Basically you just initiate it whenever you want to track the progress of a `for` loop.
+Ok this is probably more of a public service announcement than anything else!  For a long time I did not know about the [*tqdm*](https://tqdm.github.io/) python package, but I wish I had!  You can easily plug it into your code where you might want some kind of progress tracker - something that I just like to have for my MCMCs as a convencience!  Basically you just initiate it whenever you want to track the progress of a `for` loop.
 
 **TQDM Example**
 
