@@ -50,6 +50,7 @@ Additionally, read through **A Practical Guide to MCMC Part 1: MCMC Basics** by 
 sections/ingredients
 sections/progress_bar
 sections/numpy_v_scipy
+sections/building_priors/building_priors
 ```
 
 
