@@ -26,6 +26,8 @@ extensions = [
     "sphinx_copybutton",      # https://sphinx-copybutton.readthedocs.io/en/latest/
 ]
 
+myst_enable_extensions = ["dollarmath", "amsmath"]  # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
+
 templates_path = ['_templates']
 exclude_patterns = []
 
