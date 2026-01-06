@@ -47,6 +47,7 @@ Additionally, read through **A Practical Guide to MCMC Part 1: MCMC Basics** by 
 :maxdepth: 1
 :caption: Contents:
 
+sections/mcmc_basics
 sections/ingredients
 sections/progress_bar
 sections/numpy_v_scipy
