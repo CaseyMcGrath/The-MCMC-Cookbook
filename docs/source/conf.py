@@ -28,6 +28,9 @@ extensions = [
 
 myst_enable_extensions = ["dollarmath", "amsmath"]  # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
 
+# Note: in order to hyperlink to sections on other pages, it is important to increase the "myst_heading_anchors" to the level of those headings (at least!)
+myst_heading_anchors = 4                            # https://myst-parser.readthedocs.io/en/latest/configuration.html#configuration
+
 templates_path = ['_templates']
 exclude_patterns = []
 
