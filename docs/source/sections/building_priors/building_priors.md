@@ -17,7 +17,6 @@ Let's come up with a way to build some priors that we can then use in our MCMC.
 
 
 ```python
-from tqdm import tqdm
 import scipy.stats
 import numpy as np
 import matplotlib.pyplot as plt
