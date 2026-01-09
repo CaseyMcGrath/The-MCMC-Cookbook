@@ -88,7 +88,7 @@ def lnprior(params):
     prior1 = priors[1].pdf(params[1])
     prior2 = priors[2].pdf(params[2])
 
-    # !!Bouncary check!!
+    # !!Boundary check!!
     # If any of the parameters land out of their boundary, let's automatically return an effective (numerical) -inf
     if (prior0 == 0) or (prior1 == 0) or (prior2 == 0):
         return -1e300
