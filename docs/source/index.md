@@ -52,6 +52,7 @@ sections/ingredients
 sections/progress_bar
 sections/numpy_v_scipy
 sections/building_priors/building_priors
+sections/building_jump_proposals
 
 sections/references
 ```

@@ -1,0 +1,200 @@
+# Building Jump Proposal Distributions
+
+Let's talk a little about jump proposals.  As we know, the posterior, prior, and likelihood PDFs all appear in [Bayes' Theorem](./mcmc_basics.md#basic-bayesian).  But this "jump proposal" PDF is a brand new thing that got introduced as a part of the actual [MCMC algorithm itself](./mcmc_basics.md#the-acceptance-ratio).  So what is it?  Well first and foremost, it is one of the most critical components (if not *the* most critical component) in our MCMC!
+
+```{important}
+The jump proposal is so named because it is a PDF that can generate a new random proposed sample of our model's parameters.  At every iteration, our MCMC is sitting at some current value of our parameters $\vec{x}_i$, and it uses the jump proposal to propose a "jump" to a proposed new value of our parameters $\vec{x}_{i+1}$.
+
+The jump proposal can be as simple or as complicated of a PDF as you want to define.  But often the efficiency of the MCMC sampler (i.e. how quickly it can begin returning "true" samples from the underlying posterior distribution) will largely depend on how well chosen of a jump proposal we are using.
+```
+
+```{margin}
+You may read papers where for a specific study, the investigators create their own "custom" MCMC.  Often this means that they will have create some sort of specialized mixture of different jump proposals that works well for sampling their specific posterior distribution.  If you are curious to see a real-world example of this, {cite:t}`CorbinCornish_2010` describe in their Section 3.3 of their work how they built a (parallel tempered) MCMC sampler that employed, "A combination of six proposal distributions."  They then briefly describe (in words) what each jump proposal was doing and why it was useful in their cocktail!
+```
+Additionally, the jump proposal can really be a collection of *multiple* jump proposal PDFs.  Often times for more complicated problems, a single type of jump proposal won't be good enough for the efficiency we desire, so we will create a "cocktail" of multiple jump proposals that get used together.  More on this idea later - first, let's figure out how to define a general jump proposal!
+
+
+## Forward and Reverse Jumps
+
+Recall that earlier we said that the jump PDF needs to be able to generate new random parameter samples, and it needs to be able to be able to calculate the PDF value of a proposed sample given the current sample.  And looking again at our expression in the [acceptance ratio criteria](./mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm), we have two terms that need to be evaluated.  These are the "forward" and the "reverse" jumps:
+
+```{margin}
+Note there is a little bit of asymmetry here, in the sense that we are saying our **forward** jump needs to be able to do two things, while the **reverse** jump only needs to be able to do one.  This is for two reasons.  One is that we know from the [acceptance ratio criteria](./mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm) both of these things need to be able to calculate a PDF value.  But in addition to that, we said in the [pseudo-code](./mcmc_basics.md#pseudo-code-for-the-mcmc-algorithm) that the forward jump needs to be able to generate new random samples.  Hence we are going to give it *two* tasks!
+```
+```{admonition} The "Forward" and "Reverse" Jump PDFs
+$\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)$ is the **"forward jump proposal"**.  It is the PDF value of jumping to the proposed position of parameter space given the *current position* in parameter space.  The forward jump needs to be able to:
+1. Generate a new random parameter sample.
+2. Calculate the PDF value of the proposed sample given the current sample.
+
+$\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)$ is the **"reverse jump proposal"**.  It is the PDF value of jumping to the current position of parameter space given the *proposed position* in parameter space.  The reverse jump needs to be able to:
+1. Calculate the PDF value of the current sample given the proposed sample.
+```
+
+## Gaussian Jumps
+
+```{margin}
+I strongly recommend that you check out {cite:t}`Ellis_2018` for a nice visual explanation of the Gaussian jump!
+```
+[The Gaussian](https://en.wikipedia.org/wiki/Normal_distribution) jump proposal is perhaps the easiest and most common starting point when cooking up an MCMC.  If our model has only a *single* parameter (or if we are creating the jump for just one of our model parameters) then this is the functional form of our Gaussian PDF:
+
+$$
+\text{J}\left(a | b \right) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp\left[-\frac{1}{2}\frac{\left(a - b\right)^2}{\sigma^2}\right]
+$$
+
+As a function, it says, "return the value of the PDF at some value $a$, centered at the value of $b$."  So the mean of this Gaussian is $b$, with standard deviation $\sigma$.
+
+And the nice thing is that [*SciPy* already has this distribution defined](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html#scipy-stats-norm) - we can call it as a function to calculate the PDF value at $a$ (given $b$), and we can also use it to generate new random variables.
+
+### Example
+
+Now let's code up two functions for our forward and reverse jump proposals, that achieve the needed aspects mentioned above.  
+
+Here I am making a choice to have my **forward jump** return a `tuple` object.  It takes as input the current parameter value, and returns both a new proposed parameter value (randomly drawn from my Gaussian), and the PDF of the proposed sample given the current sample.
+
+The **reverse jump** only needs to return the value of the PDF of the current sample given the proposed sample (provided we give it as input both of those values).
+
+
+```python
+import scipy.stats
+```
+
+
+```python
+# The FORWARD jump proposal
+
+def jump_F_Gaussian(sample_current):
+    # standard deviation of the jump
+    std = 0.3
+    
+    # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
+    sample_proposed = scipy.stats.norm(loc=sample_current, scale=std).rvs()
+    pdf_value       = scipy.stats.norm(loc=sample_current, scale=std).pdf(sample_proposed)
+    
+    return sample_proposed, pdf_value
+
+
+# The REVERSE jump proposal
+
+def jump_R_Gaussian(sample_current, sample_proposed):
+    # standard deviation of the jump
+    std = 0.3
+    
+    # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
+    pdf_value = scipy.stats.norm(loc=sample_proposed, scale=std).pdf(sample_current)
+    
+    return pdf_value
+```
+
+Let's test out our two new functions on a little example!  Try copying this code and run the following cell multiple times - what do you notice?
+
+
+```python
+# Pick a starting parameter value
+old_sample = 8.36
+
+# Propose a new parameter value + it's PDF value using the forward jump proposal
+new_sample, PDF_forward = jump_F_Gaussian(old_sample)
+
+# Now calculate what the reverse PDF value would be if we jump from the proposed parameter back to the current parameter
+PDF_reverse = jump_R_Gaussian(old_sample, new_sample)
+
+print("Current Sample  = {0:0.4f}".format(old_sample))
+print("Proposed Sample = {0:0.4f}".format(new_sample))
+print("PDF value of Proposed sample given Current  sample (FORWARD jump) = {0:0.4f}".format(PDF_forward))
+print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.4f}".format(PDF_reverse))
+```
+
+    Current Sample  = 8.3600
+    Proposed Sample = 7.6563
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0849
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.0849
+
+
+## Multivariate Normal Jumps
+
+[The Multivariate Normal](https://en.wikipedia.org/wiki/Multivariate_normal_distribution) jump proposal is just the generalization of the Gaussian jump proposal for multiple parameters.  If we are creating a jump proposal for *multiple* parameters with dimension $k$, then this is the functional form of our Multivariate Normal PDF:
+
+$$
+\text{J}\left(\vec{a} | \vec{b} \right) = \frac{1}{\sqrt{(2\pi)^k |\Sigma|}} \exp\left[-\frac{1}{2} \left(\vec{a}-\vec{b}\right)^T \Sigma^{-1} \left(\vec{a}-\vec{b}\right)   \right]
+$$
+
+Once again, [*SciPy* has this distribution covered](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.multivariate_normal.html#scipy-stats-multivariate-normal), so we don't have to reinvent the wheel here.
+
+### Example
+
+Now let's code up two functions for our forward and reverse jump proposals, that achieve the needed aspects mentioned above.  We are going to follow the same general structure as we did above for the Gaussian, so this is now just a slight modification of what we have already created!
+
+
+```python
+import numpy as np
+```
+
+
+```python
+# The FORWARD jump proposal
+
+def jump_F_MultivariateNorm(sample_current):
+    # Covariance matrix that set's each parameter's jump scale
+    Cov = np.array([[0.3, 0    ],
+                    [0,   0.5]])
+    
+    # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
+    sample_proposed = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).rvs()
+    pdf_value             = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).pdf(sample_proposed)
+    
+    return sample_proposed, pdf_value
+
+
+# The REVERSE jump proposal
+
+def jump_R_MultivariateNorm(sample_current, sample_proposed):
+    # standard deviation of the jump
+    Cov = np.array([[0.3, 0    ],
+                    [0,   0.5]])
+    
+    # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
+    pdf_value = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov).pdf(sample_current)
+    
+    return pdf_value
+```
+
+Let's test out our two new functions on a little example!  Try copying this code and run the following cell multiple times - what do you notice?
+
+
+```python
+# Pick a starting parameter value
+old_sample = [8.36, -2.37]
+
+# Propose a new parameter value + it's PDF value using the forward jump proposal
+new_sample, PDF_forward = jump_F_MultivariateNorm(old_sample)
+
+# Now calculate what the reverse PDF value would be if we jump from the proposed parameter back to the current parameter
+PDF_reverse = jump_R_MultivariateNorm(old_sample, new_sample)
+
+print("Current Sample  =", *["{0:0.4f}, ".format(param) for param in old_sample])
+print("Proposed Sample =", *["{0:0.4f}, ".format(param) for param in new_sample])
+print("PDF value of Proposed sample given Current  sample (FORWARD jump) = {0:0.4f}".format(PDF_forward))
+print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.4f}".format(PDF_reverse))
+```
+
+    Current Sample  = 8.3600,  -2.3700, 
+    Proposed Sample = 8.9614,  -2.5144, 
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.2202
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.2202
+
+
+## Symmetric Jump Proposals
+
+The Gaussian / Multivariate Normal jump proposals are a special type of jump proposal known as a **"Symmetric Jump Proposals."** By definition, symmetric jumps have the same forward and reverse PDF value.  In other words, symmetric jump proposals will have the same probability of jumping from the current position to the proposed position, as they do from the proposed position to the current position.  This has an important consequence, namely:
+
+```{important}
+**Symmetric Jumps** result in the ratio of the reverse to forward jump found in the [acceptance ratio criteria](./mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm) being identically $=1$ because:
+
+$$
+\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right) = \text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right) .
+$$
+```
+
+Did you notice that no matter what, when you run the above cells repeatedly, even though the proposed sample is different every time, and the PDF values themselves are different, the forward and reverse PDFs always match?  This is the reason!  And moreover, you can see mathematically that $J\left(a|b\right) = J\left(b|a\right)$ for the Gaussian jump (and $J\left(\vec{a}|\vec{b}\right) = J\left(\vec{b}|\vec{a}\right)$ for the Multivariate Normal jump).
+
+This is convenient, because if we can prove mathematically that the jump proposal we want to use for our MCMC is symmetric, then we don't really have to spend computation time calculating it in the [acceptance ratio criteria](./mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm).  However, while learning all of this I personally found it really easy to miss this point, and it later caused me confusion when trying to understand how to build symmetric and non-symmetric jumps.  So for the purpose of learning and consistency, for symmetric jump proposals in **The MCMC Cookbook** we will still explicitly write this out and calculate it in our MCMCs (even at the expense of *maybe* adding some unnecessary computation time).
