@@ -36,8 +36,7 @@ Before you begin working through **The MCMC Cookbook**, I strongly recommend you
 
 Additionally, read through **A Practical Guide to MCMC Part 1: MCMC Basics** by {cite:t}`Ellis_2018`.  It provides some really nice explanations and helps to build on some important conceptual understandings of how an MCMC works.  Plus it also provides coding examples that you can copy and play with.
 
-```{bibliography}
-```
+
 
 
 
@@ -53,6 +52,8 @@ sections/ingredients
 sections/progress_bar
 sections/numpy_v_scipy
 sections/building_priors/building_priors
+
+sections/references
 ```
 
 
