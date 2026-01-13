@@ -81,7 +81,7 @@ Now what we want is to define a prior function, where we can input MCMC paramete
 ```python
 # Let's use the dictionary we defined above to construct our log-prior function
 
-def lnprior(params):
+def ln_prior(params):
 
     # Calculate the PDF value of each input parameter for it's corresponding prior distribution
     prior0 = priors[0].pdf(params[0])
@@ -104,8 +104,8 @@ Here are some examples of our function in action:
 parameter_test1 = [3, 0.1, 6.2]
 parameter_test2 = [2, 0.1, 6.2]  # Note: this one should fall out-of-bounds, because the first parameter value does not land inside of the Uniform Distribution!
 
-print("Log-Prior of Parameter Samples 1: ", lnprior(parameter_test1))
-print("Log-Prior of Parameter Samples 2: ", lnprior(parameter_test2))
+print("Log-Prior of Parameter Samples 1: ", ln_prior(parameter_test1))
+print("Log-Prior of Parameter Samples 2: ", ln_prior(parameter_test2))
 ```
 
     Log-Prior of Parameter Samples 1:  -2.8094432150738418
