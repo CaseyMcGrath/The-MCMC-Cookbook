@@ -68,6 +68,15 @@ Ok seeing the acceptance ratio equation {eq}`acceptance_ratio` is great, but as 
 $$
 \frac{\text{pr}\left(\vec{x}_{i+1}|\vec{d}\right)}{\text{pr}\left(\vec{x}_{i}|\vec{d}\right)} \ \frac{\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)}{\text{like}\left(\vec{d}|\vec{x}_{i}\right)} \ \frac{\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}{\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \ > \ \mathcal{U}\left[0,1\right] ,
 $$(acceptance_ratio_code)
+
+or, if we take the natural log of both sides of the equation:
+
+$$
+\begin{align}
+    \ln\Bigg(\text{pr}\left(\vec{x}_{i+1}|\vec{d}\right) - \text{pr}\left(\vec{x}_{i}|\vec{d}\right)\Bigg) \ + \ \ln\Bigg(\text{like}\left(\vec{d}|\vec{x}_{i+1}\right) - \text{like}\left(\vec{d}|\vec{x}_{i}\right)\Bigg) \\  
+    + \ \ln\Bigg(\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right) - \text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)\Bigg) \ > \ \ln\Big(\mathcal{U}\left[0,1\right]\Big) ,
+\end{align}
+$$(ln_acceptance_ratio_code)
 ```
 
 with each of the following new components:
