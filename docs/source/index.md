@@ -56,6 +56,7 @@ sections/building_priors/building_priors
 sections/building_jump_proposals
 
 sections/toy_problems
+sections/mcmc_1/mcmc_1
 
 sections/references
 ```
