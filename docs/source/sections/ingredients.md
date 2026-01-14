@@ -9,18 +9,21 @@ As we create our MCMC recipes, we will add capabilities and functions depending 
 
 ```{tab-item} Conveniences
 - progress tracking bar
-- tracking diagnostics
+- efficiency tracking diagnostics
     - jump acceptance ratios
     - temperature swap acceptance ratios
 - cyclic parameters
 ```
 
 ```{tab-item} Priors
-- different priors
+- Uniform
+- Log-Uniform
+- Normal
 ```
 
-```{tab-item} Jumps
+```{tab-item} Jump Proposals
 - symmetric jumps
+    - Gaussian/Multivariate Normal
 - prior jumps
 - block (gibbs) jumps
 - multiple jump schemes
@@ -30,7 +33,6 @@ As we create our MCMC recipes, we will add capabilities and functions depending 
 - standard MCMC
 - parallel tempering
 - rejection sampling
-    - mcmc implementation
 ```
 
 ````
