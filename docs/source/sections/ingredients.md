@@ -15,12 +15,6 @@ As we create our MCMC recipes, we will add capabilities and functions depending 
 - cyclic parameters
 ```
 
-```{tab-item} Priors
-- Uniform
-- Log-Uniform
-- Normal
-```
-
 ```{tab-item} Jump Proposals
 - symmetric jumps
     - Gaussian/Multivariate Normal
