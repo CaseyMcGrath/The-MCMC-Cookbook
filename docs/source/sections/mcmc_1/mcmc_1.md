@@ -4,7 +4,7 @@ Alright, we finally have enough background to cook up our first MCMC!
 
 ## Ingredients
 
-Here are the ingredients that we are going to use in this MCMC:
+Here is the list of ingredients that we are going to use in this MCMC:
 
 ````{tab-set}
 
@@ -18,7 +18,7 @@ Here are the ingredients that we are going to use in this MCMC:
 
 ```{tab-item} Jump Proposals
 - [x] symmetric jumps
-    - [ ] Gaussian/Multivariate Normal
+    - [x] Gaussian/Multivariate Normal
 - [ ] prior jumps
 - [ ] block (gibbs) jumps
 - [ ] multiple jump schemes
