@@ -76,6 +76,7 @@ Now what we want is to define a prior function, where we can input MCMC paramete
 
 - We are going to define the 'log-prior' function, where the output of the function is actually the natural log of the prior.  This is a pretty common practice for MCMC authors, but not a necessary one.
 - Sometimes we might have a parameter that must remain within hard boundaries.  Such is the case with uniformly distributed parameters, for example.  In these cases, if we input a value into our log-prior that steps outside of this boundary, we would like to return $-\infty$ (i.e. the probability of such a value should be $0$, so the log-probability should be $-\infty$.  Since working with "infinities" can sometimes get tricky when coding, we are going to achieve the same effect by just setting it to a non-infinite but extremely small negative number: $-10^{300}$.
+- We are also going to assume that these are three **independent** parameters (see [the next section](#joint-prior-normalization) for more details on this point). 
 
 
 ```python
@@ -111,3 +112,29 @@ print("Log-Prior of Parameter Samples 2: ", ln_prior(parameter_test2))
     Log-Prior of Parameter Samples 1:  -2.8094432150738418
     Log-Prior of Parameter Samples 2:  -1e+300
 
+
+## Joint Prior Normalization
+
+Did you notice above that we wrote the `ln_prior` function to return:
+
+> np.log(prior0 * prior1 * prior2)
+
+So we are saying that the combined/joint prior probability density is just the product of each of the three separate priors.  But at the end of the day, a PDF needs to be normalized - so is what we did correct?
+
+It is *if* each of the parameters are **independent** from one another.
+
+```{admonition} Independent Variables
+
+Recall that the joint probability for independent variables $a$, $b$, $c$, ... is:
+
+$$
+\text{p}(a,b,c,...) = \text{p}(a) \ \text{p}(b) \ \text{p}(c) \ ...
+$$
+
+```
+
+So if each of the individual PDFs $\text{p}(a)$, $\text{p}(b)$, $\text{p}(c)$, ... are normalized, then multiplying them together gives a joint PDF that is also normalized.  And remember, we are using *SciPy* for each of the three PDFs shown above.  *SciPy* already has all of the probability distributions normalized, so as long as we are working with independent parameters, then we are good to just multiply them together.
+
+```{caution}
+If you have a model where not all of the model parameters are independent, then you may need to be more careful in defining your prior PDF, compared to what we did above!
+```
