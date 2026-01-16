@@ -21,6 +21,8 @@ $$ (bump_model)
 - $t_0$ = central time
 - $\sigma$ = bump width (the standard deviation of the Gaussian)
 
+We will assume all three parameters are **independent**.
+
 **Dataset**
 
 We collect a total of $N_t$ observed data and store it in an array $\vec{d}$.  And let's say that the observation uncertainty is the same for every data point.  In other words, the underlying noise in our measurements is just "white noise" with standard deviation $\sigma_n$ - none of our observations are correlated with each other.
@@ -44,7 +46,15 @@ $$
 \mathcal{N} = \frac{1}{\sqrt{\left(2\pi \sigma_n^2\right)^{N_t}}}
 $$
 
+**Prior**
+
+For the central time $t_0$, a reasonable prior is a **uniform prior**.  We have some dataset with a specific start and end time, and any time between those two values is equally reasonable as a potential value for $t_0$.
+
+For both the amplitude $A$ and bump width $\sigma$ parameters, we will give each a **log-uniform prior**.  Unlike $t_0$, let's say we don't really have a reason to think there would exist hard "boundaries" on $A$ or $\sigma$ (like with the start and end times of our dataset).  Moreover, we might expect there could exist a dynamic range of bump amplitudes and widths.  We will say it is reasonable that small bumps (both in amplitude and/or width) are expected to occur more frequently, while large bumps are less common.  So with this in mind, choosing a log-uniform prior puts more probability on small duration bumps than it does large duration bumps, and can span a dynamic range.
+
+And since we are working with independent parameters, the joint prior will just be the product of the individual parameter priors
 
 
-
-
+$$
+\text{pr}\left(\vec{x}\right) = \text{pr}(A) \ \text{pr}(t_0) \ \text{pr}(\sigma)
+$$
