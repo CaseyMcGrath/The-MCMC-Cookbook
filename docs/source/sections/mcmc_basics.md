@@ -27,7 +27,7 @@ Remember that to be a PDF, it must be normalized. It is a *probability density*,
 | $\vec{x}$ | vector | The "list" (or vector or array, how ever you want to think about it!) of the parameters in our model.  This is the thing we want our MCMC to estimate!  If our model only has a single parameter, then this is just a scalar. |
 | $\vec{d}$ | vector | The "list" of the data we have observed.  This is the input to our model to inform our MCMC. |
 | $\text{post}\left(\vec{x}\|\vec{d}\right)$ | PDF | The "**posterior**" PDF.  It is a function of the model parameters, given the data observed.  At the end of the day, our entire MCMC algorithm is being built to figure this thing out!  We don't know it ahead of time. |
-| $\text{pr}\left(\vec{x}\|\vec{d}\right)$ | PDF | The "**prior**" PDF.  It is a function of the model parameters, and represents our intial belief of how the parameters should be distributed.  This is usually the easiest thing to write down when building our MCMC. |
+| $\text{pr}\left(\vec{x}\right)$ | PDF | The "**prior**" PDF.  It is a function of the model parameters, and represents our intial belief of how the parameters should be distributed.  This is usually the easiest thing to write down when building our MCMC. |
 | $\text{like}\left(\vec{d}\|\vec{x}\right)$ | PDF | The "**likelihood**" PDF.  It is a function of the observed data, given a set of specified model parameters.  This is usually the most complicated thing we have to write down when building our MCMC. |
 | $\text{evi}\left(\vec{d}\right)$ | normalization | The "**evidence**" is the normalization factor of the posterior PDF.  It is the integral of the prior and the likelihood over the entire possible parameter space.  That is: $ \text{evi}\left(\vec{d}\right) = \int \ \text{pr}\left(\vec{x}\right) \ \text{like}\left(\vec{d}\|\vec{x}\right) \ \text{d}\vec{x} $ |
 
@@ -40,7 +40,7 @@ The criteria is the "acceptance ratio."  In mathematical notation, you will ofte
 Notice how in the first two terms in the acceptance ratio, the respective prior and likelihood ratios, they are ratios of the proposed parameter sample (in the numerator) to the current parameter sample (in the denominator).  However, in the third term, the jump proposal ratio, *it is the reverse!*  It is the ratio of the current parameter sample to the proposed parameter sample.  Try to digest this, because I think it is easy to lose this understanding in the notation, which is explained more below.
 ```
 $$
-\overbrace{\text{A}\left(\vec{x}_{i+1} | \vec{x}_i \right)}^\text{acceptance ratio} = \text{min}\left[ \ \frac{\text{pr}\left(\vec{x}_{i+1}|\vec{d}\right)}{\text{pr}\left(\vec{x}_{i}|\vec{d}\right)} \ \frac{\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)}{\text{like}\left(\vec{d}|\vec{x}_{i}\right)} \ \frac{\overbrace{\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}^\text{jump proposal}}{\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \quad , \quad 1 \ \right] ,
+\overbrace{\text{A}\left(\vec{x}_{i+1} | \vec{x}_i \right)}^\text{acceptance ratio} = \text{min}\left[ \ \frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)}{\text{like}\left(\vec{d}|\vec{x}_{i}\right)} \ \frac{\overbrace{\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}^\text{jump proposal}}{\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \quad , \quad 1 \ \right] ,
 $$ (acceptance_ratio)
 
 with each of the following new components:
@@ -66,14 +66,14 @@ Ok seeing the acceptance ratio equation {eq}`acceptance_ratio` is great, but as 
 
 ```{admonition} Accept new proposed parameter sample $\vec{x}_{i+1}$ only if:
 $$
-\frac{\text{pr}\left(\vec{x}_{i+1}|\vec{d}\right)}{\text{pr}\left(\vec{x}_{i}|\vec{d}\right)} \ \frac{\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)}{\text{like}\left(\vec{d}|\vec{x}_{i}\right)} \ \frac{\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}{\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \ > \ \mathcal{U}\left[0,1\right] ,
+\frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)}{\text{like}\left(\vec{d}|\vec{x}_{i}\right)} \ \frac{\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}{\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \ > \ \mathcal{U}\left[0,1\right] ,
 $$(acceptance_ratio_code)
 
 or, if we take the natural log of both sides of the equation:
 
 $$
 \begin{align}
-    \ln\Bigg(\text{pr}\left(\vec{x}_{i+1}|\vec{d}\right) - \text{pr}\left(\vec{x}_{i}|\vec{d}\right)\Bigg) \ + \ \ln\Bigg(\text{like}\left(\vec{d}|\vec{x}_{i+1}\right) - \text{like}\left(\vec{d}|\vec{x}_{i}\right)\Bigg) \\  
+    \ln\Bigg(\text{pr}\left(\vec{x}_{i+1}\right) - \text{pr}\left(\vec{x}_{i}\right)\Bigg) \ + \ \ln\Bigg(\text{like}\left(\vec{d}|\vec{x}_{i+1}\right) - \text{like}\left(\vec{d}|\vec{x}_{i}\right)\Bigg) \\  
     + \ \ln\Bigg(\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right) - \text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)\Bigg) \ > \ \ln\Big(\mathcal{U}\left[0,1\right]\Big) ,
 \end{align}
 $$(ln_acceptance_ratio_code)
