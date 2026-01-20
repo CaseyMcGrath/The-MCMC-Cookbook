@@ -109,9 +109,7 @@ So this gives us a high-level view of how our sampler is performing.  But it is 
 
 If instead of just a static average for our in-model jump acceptance ratio we want to see how the acceptance ratio changes over time *dynamically* as our algorithm runs, we can make just a very slight modification to the above counter!  Rather than a scalar number that increases by one every time the jump is accepted, we create an array that stores a "0" (proposed jump not accepted) or a "1" (proposed jump accepted) at every step.  Then *after* the MCMC finishes, we cummulatively sum up that array of values, and divide by the number of cumulative iterations at each step. 
 
-```{margin}
-*NumPy's* [cummulative summation tool](https://numpy.org/doc/stable/reference/generated/numpy.cumsum.html) is very helpful here!  By just storing an integer "1" for the iterations where the jump is accepted, the cumulative sum of the array then gives us how many total jumps have been accepted at each step in the MCMC.  If we then divide by the total number of iterations at every step, we then have the ratio of accepted steps at every step!
-```
+
 
 ```python
 # data structure 
@@ -186,6 +184,9 @@ for i in tqdm(range(1,Nsample)):
     100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:14<00:00, 2687.04it/s]
 
 
+```{margin}
+*NumPy's* [cummulative summation tool](https://numpy.org/doc/stable/reference/generated/numpy.cumsum.html) is very helpful here!  By just storing an integer "1" for the iterations where the jump is accepted, the cumulative sum of the array then gives us how many total jumps have been accepted at each step in the MCMC.  If we then divide by the total number of iterations at every step, we then have the ratio of accepted steps at every step!
+```
 
 ```python
 # Calculate the in-model jump acceptance ratio (dynamic)
