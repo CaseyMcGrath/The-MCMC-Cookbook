@@ -105,10 +105,12 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = 8.3600
-    Proposed Sample = 7.6563
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0849
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.0849
+    Proposed Sample = 8.1677
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 1.0828
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 1.0828
 
+
+You should notice that no matter how many times you run the cell, actual value of the PDF for the forward and reverse jumps does not change, even though the proposed sample is different each time.
 
 ## Multivariate Normal Jumps
 
@@ -126,6 +128,7 @@ Now let's code up two functions for our forward and reverse jump proposals, that
 
 
 ```python
+import scipy.stats
 import numpy as np
 ```
 
@@ -140,7 +143,7 @@ def jump_F_MultivariateNorm(sample_current):
     
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
     sample_proposed = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).rvs()
-    pdf_value             = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).pdf(sample_proposed)
+    pdf_value       = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).pdf(sample_proposed)
     
     return sample_proposed, pdf_value
 
@@ -178,10 +181,12 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = 8.3600,  -2.3700, 
-    Proposed Sample = 8.9614,  -2.5144, 
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.2202
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.2202
+    Proposed Sample = 9.1061,  -2.7247, 
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.1433
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.1433
 
+
+You should notice that no matter how many times you run the cell, actual value of the PDF for the forward and reverse jumps does not change, even though the proposed sample is different each time.
 
 ## Symmetric Jump Proposals
 
@@ -198,3 +203,96 @@ $$
 Did you notice that no matter what, when you run the above cells repeatedly, even though the proposed sample is different every time, and the PDF values themselves are different, the forward and reverse PDFs always match?  This is the reason!  And moreover, you can see mathematically that $J\left(a|b\right) = J\left(b|a\right)$ for the Gaussian jump (and $J\left(\vec{a}|\vec{b}\right) = J\left(\vec{b}|\vec{a}\right)$ for the Multivariate Normal jump).
 
 This is convenient, because if we can prove mathematically that the jump proposal we want to use for our MCMC is symmetric, then we don't really have to spend computation time calculating it in the [acceptance ratio criteria](./mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm).  However, while learning all of this I personally found it really easy to miss this point, and it later caused me confusion when trying to understand how to build symmetric and non-symmetric jumps.  So for the purpose of learning and consistency, for symmetric jump proposals in **The MCMC Cookbook** we will still explicitly write this out and calculate it in our MCMCs (even at the expense of *maybe* adding some unnecessary computation time).
+
+## Prior Jumps
+
+A very useful type of jump proposal to include in an MCMC is a general "prior jump."  As a function, it says, "draw a random sample from the prior PDF itself, and return the PDF value."
+
+So this jump proposal will directly make use of [whatever prior distributions](./building_priors/building_priors.md) we are using for our model parameters.  In essense it is a very "uninformed jump."  For example, the [Gaussian](#gaussian-jumps) and [Multivariate Normal](#multivariate-normal-jumps) jumps both use the current parameter sample in the MCMC to draw the next proposed sample.  But the prior jump does not - it is like blindly throwing a dart at a dart board.  The only constraint with the prior jump is that the next proposed parameter sample must just exist somewhere within the prior space that we have defined!
+
+### Example
+
+Now let's code up two functions for our forward and reverse jump proposals, that achieve the needed aspects mentioned above.  We are going to follow the same general structure as we have above.
+
+Also, since the prior jump will entirely depend on the prior PDFs we choose for our specific problem of interest, let's use the prior shown in [Building Prior Distributions](./building_priors/building_priors.md) for this specific example.  Following the structure we have already described, that means we will first choose to set up a prior dictionary to store the prior PDFs of our model's parameters:
+
+
+```python
+import scipy.stats
+import numpy as np
+```
+
+
+```python
+# Define a dictionary to store the priors for 3 different parameters
+
+priors = {
+          0: scipy.stats.uniform(loc=3, scale=7),    # loc < x < loc + scale
+          1: scipy.stats.loguniform(a=1e-1, b=1e1),  #   a < x < b
+          2: scipy.stats.norm(loc=5, scale=1),       # loc = mean, scale = standard deviation
+         }
+```
+
+Then we will go ahead and use the prior dictionary to construct our forward and reverse jump proposals.  This example model has three parameters, so we draw a new parameter value from each of their respective PDFs, and then calculate the PDF value of those new parameters.
+
+```{important}
+As was discussed in the [Joint Prior Normalization section](./building_priors/building_priors.md#joint-prior-normalization), we are also assuming here that the prior we are working with has independent parameters, so the joint jump PDF just multiplies each individual PDF together.
+```
+
+
+```python
+# The FORWARD jump proposal
+
+def jump_F_prior(sample_current):
+    # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
+    # NOTE: no actual functional dependence on sample_current!
+    sample_proposed = np.array([priors[0].rvs(), priors[1].rvs(), priors[2].rvs()])
+    pdf_value       = priors[0].pdf(sample_proposed[0]) * priors[1].pdf(sample_proposed[1]) * priors[2].pdf(sample_proposed[2])
+    
+    return sample_proposed, pdf_value
+
+
+# The REVERSE jump proposal
+
+def jump_R_prior(sample_current, sample_proposed):
+    # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
+    # NOTE: no actual functional dependence on sample_proposed!
+    pdf_value = priors[0].pdf(sample_current[0]) * priors[1].pdf(sample_current[1]) * priors[2].pdf(sample_current[2])
+    
+    return pdf_value
+```
+
+```{attention}
+As mentioned above, the forward jump doesn't actually (functionally) depend on the current sample, and the reverse jump doesn't actually (functionally) depend on the proposed jump.  So why even bother coding the functions above such that they have them as inputs?!
+
+The answer is - you don't have to!  I am 'future proofing' things a little here - trying to make it so that all of the jump proposals that we define here are structurally set up in the exact same way.  This will make our lives easier when we start to build our MCMC algorithm such that it uses *multiple* jump schemes, not just one!
+```
+
+Let's test out our two new functions on a little example!  Try copying this code and run the following cell multiple times - what do you notice?
+
+
+```python
+# Pick a starting parameter value
+old_sample = [3, 0.1, 6.2]
+
+# Propose a new parameter value + it's PDF value using the forward jump proposal
+new_sample, PDF_forward = jump_F_prior(old_sample)
+
+# Now calculate what the reverse PDF value would be if we jump from the proposed parameter back to the current parameter
+PDF_reverse = jump_R_prior(old_sample, new_sample)
+
+print("Current Sample  =", old_sample)
+print("Proposed Sample =", new_sample)
+print("PDF value of Proposed sample given Current  sample (FORWARD jump) = {0:0.4f}".format(PDF_forward))
+print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.4f}".format(PDF_reverse))
+```
+
+    Current Sample  = [3, 0.1, 6.2]
+    Proposed Sample = [7.730241   0.33263233 4.57811708]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0340
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.0602
+
+
+Unlike with the symmetric jump proposals, now you should notice that the forward and reverse jumps end up having different PDF values every time you generate a new proposed sample!
+
+> The prior jump proposal is a **non-symmetric** jump proposal!
