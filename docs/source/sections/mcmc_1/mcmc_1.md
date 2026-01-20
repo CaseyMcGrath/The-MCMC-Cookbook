@@ -11,7 +11,7 @@ Here is the list of ingredients that we are going to use in this MCMC:
 ```{tab-item} Conveniences
 - [x] progress tracking bar
 - [ ] efficiency tracking diagnostics
-    - [ ] jump acceptance ratios
+    - [ ] in-model jump acceptance ratios
     - [ ] temperature swap acceptance ratios
 - [ ] cyclic parameters
 ```

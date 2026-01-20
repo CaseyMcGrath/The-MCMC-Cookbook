@@ -10,7 +10,7 @@ As we create our MCMC recipes, we will add capabilities and functions depending 
 ```{tab-item} Conveniences
 - progress tracking bar
 - efficiency tracking diagnostics
-    - jump acceptance ratios
+    - in-model jump acceptance ratios
     - temperature swap acceptance ratios
 - cyclic parameters
 ```
