@@ -296,3 +296,34 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 Unlike with the symmetric jump proposals, now you should notice that the forward and reverse jumps end up having different PDF values every time you generate a new proposed sample!
 
 > The prior jump proposal is a **non-symmetric** jump proposal!
+
+### An Interesting Observation about Prior Jumps
+
+There is a rather interesting and helpful observation to make about prior jumps that is unique and offers a deeper insight into what we are doing here.
+
+Let's say that we have no likelihood function, or that we intentionally choose to set our likelihood function to always return the value $\text{like}\left(\vec{d} | \vec{x}\right) = 1$ no matter what set of parameters $\vec{x}$ that we give it.  Now look at equation {eq}`acceptance_ratio`.  The ratio of the likelihood functions is now gone (it is just identically $1$ in this scenario).  If the jump PDF is just equal to the prior PDF, i.e. $\text{J}\left(\vec{a}|\vec{b}\right) = \text{pr}\left(\vec{a}\right)$, then the acceptance ratio simplifies down to only:
+
+$$
+\frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}{\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \ = \ \frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{pr}\left(\vec{x}_{i}\right)}{\text{pr}\left(\vec{x}_{i+1}\right)} \ \equiv \ 1 .
+$$
+
+Remember that **Critical Observation** discussed in [The Acceptance Ratio](./mcmc_basics.md#the-acceptance-ratio)?!  Well, here is one of the consequences of that observation!
+
+Conceptually what is happening here should make sense.  In this scenario we are saying that the underlying posterior PDF we are trying to sample is just our prior PDF.  So if we build and MCMC that *also* uses a prior PDF to propose jumps, then we have a *perfectly efficient sampler*, because we are using the same distribution to propose jumps as the underlying distribution we are trying to sample!  We are sampling the underlying distribution, *with the underlying distribution!*
+
+
+````{tip}
+Practically, this actually gives us a very useful tool for **testing** our MCMC to make sure that we can return something that we *know* our MCMC should return.  Namely, once we set-up our entire MCMC algorithm and are ready to start testing it, 
+
+1. if we hard-code our likelihood function to always return $1$ (i.e. to effectively remove our likelihood function), 
+
+```
+def ln_like(...):
+    ...
+    return 1
+```
+
+2. and if we draw from a prior jump proposal 100% of the time,
+
+then we should be able to verify that our jumps are *always* accepted - i.e. [the jump acceptance ratio](./tracking_in-model_jumps/tracking_in-model_jumps.md) should return exactly $1$ for the entire MCMC simulation!  Go ahead, give it a try and see for yourself!
+````
