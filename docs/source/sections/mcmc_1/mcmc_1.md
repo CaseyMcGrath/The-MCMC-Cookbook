@@ -1200,7 +1200,7 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 
 ### MCMC Algorithm
 
-Let's run our same MCMC algorithm as before, but now with two parameters!  We will follow our [pseudo-code outline](../mcmc_basics.md#pseudo-code-for-the-mcmc-algorithm) and our [schematic](../schematics/schematics.md#mcmc).
+Let's run our same MCMC algorithm as before, but now with three parameters!  We will follow our [pseudo-code outline](../mcmc_basics.md#pseudo-code-for-the-mcmc-algorithm) and our [schematic](../schematics/schematics.md#mcmc).
 
 First we initialize our starting sample (in this problem, *we* are going to select the starting point), and we also define our MCMC data structure.
 
