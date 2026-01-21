@@ -74,6 +74,8 @@ sections/toy_problems
 sections/mcmc_1/mcmc_1
 sections/tracking_in-model_jumps/tracking_in-model_jumps
 
+sections/cyclic_parameters
+
 sections/references
 ```
 
