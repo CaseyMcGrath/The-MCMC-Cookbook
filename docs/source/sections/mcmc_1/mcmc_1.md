@@ -8,6 +8,12 @@ Here is the list of ingredients that we are going to use in this MCMC:
 
 ````{tab-set}
 
+```{tab-item} MCMC Techniques
+- [x] standard MCMC
+- [ ] parallel tempering
+- [ ] rejection sampling
+```
+
 ```{tab-item} Conveniences
 - [x] progress tracking bar
 - [ ] efficiency tracking diagnostics
@@ -22,12 +28,6 @@ Here is the list of ingredients that we are going to use in this MCMC:
 - [ ] prior jumps
 - [ ] block (gibbs) jumps
 - [ ] multiple jump schemes
-```
-
-```{tab-item} MCMC Techniques
-- [x] standard MCMC
-- [ ] parallel tempering
-- [ ] rejection sampling
 ```
 
 ````
