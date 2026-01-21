@@ -109,7 +109,9 @@ So this gives us a high-level view of how our sampler is performing.  But it is 
 
 If instead of just a static average for our in-model jump acceptance ratio we want to see how the acceptance ratio changes over time *dynamically* as our algorithm runs, we can make just a very slight modification to the above counter!  Rather than a scalar number that increases by one every time the jump is accepted, we create an array that stores a "0" (proposed jump not accepted) or a "1" (proposed jump accepted) at every step.  Then *after* the MCMC finishes, we cummulatively sum up that array of values, and divide by the number of cumulative iterations at each step. 
 
-
+```{attention}
+Remember, given how we have set things up, there are a total of $N_\text{sample}-1$ jumps in our simulation.  Just be careful below to get the indices correct for this new array!
+```
 
 ```python
 # data structure 
@@ -175,7 +177,7 @@ for i in tqdm(range(1,Nsample)):
             # accept the proposed sample
             x_samples[i,:] = x_proposed
             # update the in-model jump tracking diagnostic
-            jump_counter_inmodel[i] = 1
+            jump_counter_inmodel[i-1] = 1
         else:
             # keep the current sample
             x_samples[i,:] = x_current
@@ -217,5 +219,3 @@ plt.show()
 
     
 ![png](dynamic_acceptance_plot.png)
-
-
