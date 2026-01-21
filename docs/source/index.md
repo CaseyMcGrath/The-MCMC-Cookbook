@@ -2,7 +2,7 @@
 
 # Recipes for Crafting MCMCs
 
-When I first began my journey into the world of Markov Chain Monte Carlo (MCMC) samplers (in graduate school), I used a pre-built sampler.  I downloaded it from github and learned how to use it through a combination of practice on toy problems and reading through the documentation.  And then I tried to use it to solve the very specific problem for my research.  I suspect that many people begin their own MCMC journeys in a similar way.
+When I first began my journey into the world of Markov Chain Monte Carlo (MCMC) samplers (in graduate school), I used a pre-built sampler.  I installed it and learned how to use it through a combination of practice on toy problems and reading through the documentation.  And then I tried to use it to solve the very specific problem for my research.  I suspect that many people begin their own MCMC journeys in a similar way.
 
 But there were problems.  The first problem was that I never really understood *how* an MCMC worked.  I understood it on a conceptual level, but the algorithm I had downloaded was a black box.  Modifying the code was not really an option for me, unless I wanted to spend all of my time learning every last detail of how someone else's MCMC code worked.  And in my mind it was easy to argue that this would take an enormous amount of time, for potentially little to no pay-off.
 
@@ -18,8 +18,14 @@ But after I spent over a decade of banging my head against my computer and reach
 
 So that is the purpose of this cookbook: to develop from scratch MCMC samplers for various problems, to learn about different ingredients that often go into different MCMC samplers, and to learn which ingredients to add into your MCMC depending on the problem you want to solve.  That way, hopefully, you can learn to build your own recipe and cook exactly the MCMC that you need!
 
+```{important}
+My background is in physics and mathematics.  Most of what I have learned about computer science and coding has been out of necessity from the other two disciplines, and self-taught.  So that said, what is presented throughout **The MCMC Cookbook** might not be *the best* way to do something!  If you can think of a more elegant or cleaner way to code something I'm explaining, that's great!  And I'm always open to suggestions.
+```
+
 
 ## Goals of The MCMC Cookbook
+
+And the main goals of **The MCMC Cookbook** are to:
 
 1. Simplify the mathematical notation to make it easier to understand.
 
@@ -37,7 +43,16 @@ Before you begin working through **The MCMC Cookbook**, I strongly recommend you
 Additionally, read through **A Practical Guide to MCMC Part 1: MCMC Basics** by {cite:t}`Ellis_2018`.  It provides some really nice explanations and helps to build on some important conceptual understandings of how an MCMC works.  Plus it also provides coding examples that you can copy and play with.
 
 
+## Coding Requirements
 
+**The MCMC Cookbook** is a [*Python*-oriented](https://www.python.org/) learning guide.  All of the coding examples will be developed and explained in *Python*.  Specific packages you should have installed to run the code in this learning guide include:
+
+- [*SciPy*](https://scipy.org/)
+- [*NumPy*](https://numpy.org/doc/stable/index.html)
+- [*Matplotlib*](https://matplotlib.org/)
+- [*Pandas*](https://pandas.pydata.org/)
+- [*ChainConusmer*](https://samreay.github.io/ChainConsumer/)
+- [*tqdm*](https://tqdm.github.io/)
 
 
 ## Table of Contents

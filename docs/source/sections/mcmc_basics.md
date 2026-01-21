@@ -89,7 +89,7 @@ with each of the following new components:
 Now we have all the necessary pieces, so let us just write down a very simple set of steps that our MCMC algorithm will need to go through.
 
 ```{margin}
-Step 4. is trivial.  But sometimes it is nice to list a super easy step to check off as you go! :)
+Steps 1, 4, and 5 are pretty trivial.  Most of what makes setting up a new MCMC challenging I think is in steps 2 and 3 here.  But hopefully once we start to break all of this down, understanding steps 2 and 3 will become easier!
 ```
 ```{admonition} The MCMC Algorithm (a high level view)
 1. Initialize a starting parameter sample $\vec{x}_0$ that we will then use to start proposing new samples.
