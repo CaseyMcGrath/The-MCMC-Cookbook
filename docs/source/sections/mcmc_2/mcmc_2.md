@@ -136,7 +136,9 @@ With regards to the likelihood,
 > **we don't need to worry about including the normalization in our definition of the likelihood function.**
 
 ```{attention}
-As discussed in [Cyclic Parameters](../cyclic_parameters.md), we will define the boundaries for the cyclic parameter in our prior dictionary, and we will modify the prior function to appropriately wrap any input for the cyclic parameter around its appropriate interval.  The interval for $\phi_0$ here is $2\pi$, so for any input of this parameter into our function, we take $phi_0 = \phi_0 \text{mod} 2\pi$
+As discussed in [Cyclic Parameters](../cyclic_parameters.md), we will define the boundaries for the cyclic parameter in our prior dictionary, and we will modify the prior function to appropriately wrap any input for the cyclic parameter around its appropriate interval.  The interval for $\phi_0$ here is $2\pi$, so for any input of this parameter into our function, we can use the modulo operator ('$\bmod$' or '$\%$'):
+
+$\phi_0 = \phi_0 \bmod 2\pi$
 ```
 
 
