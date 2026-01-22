@@ -2,7 +2,7 @@
 
 Personally, I'm a fan of starting easy.  Here we will illustrate some (hopefully!) *simple toy problem examples* that we will use throughout the course of **The MCMC Cookbook**.
 
-## "The Gaussian Bump"
+## "The Bump"
 
 **Description**
 
@@ -86,7 +86,7 @@ We collect a total of $N_t$ observed data and store it in an array $\vec{d}$.  A
 
 **Likelihood**
 
-We are using the same description of the observations/dataset as we did for [The Gaussian Bump](#the-gaussian-bump), so let's use the same exact likelihood equation {eq}`time_domain_likelihood` as we did for that model (just replacing our model $M(t)$ with the new wave model).
+We are using the same description of the observations/dataset as we did for [The Bump](#the-bump), so let's use the same exact likelihood equation {eq}`time_domain_likelihood` as we did for that model (just replacing our model $M(t)$ with the new wave model).
 
 **Prior**
 

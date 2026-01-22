@@ -32,9 +32,9 @@ Here is the list of ingredients that we are going to use in this MCMC:
 
 ````
 
-## 1D Gaussian Bump
+## 1D Bump
 
-We will start with [The Gaussian Bump problem](../toy_problems.md#the-gaussian-bump).  Since this is our very first MCMC, we will start by making it a model of only one parameter $t_0$, by fixing the other two parameters $A=3.4$ and $\sigma = 0.5$!  We will repeat the exercise below two more times and add back in one additional parameter each time!
+We will start with [The Bump problem](../toy_problems.md#the-bump).  Since this is our very first MCMC, we will start by making it a model of only one parameter $t_0$, by fixing the other two parameters $A=3.4$ and $\sigma = 0.5$!  We will repeat the exercise below two more times and add back in one additional parameter each time!
 
 So the question we are essentially asking is, 
 
@@ -132,7 +132,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Gaussian Bump](../toy_problems.md#the-gaussian-bump).
+Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems.md#the-bump).
 
 For the prior, we will stick to the same way we did it in [Building Prior Distributions](../building_priors/building_priors.md).  Since we are beginning with only the $t_0$ parameter, we just need a simple uniform prior bounded by our `starttime` and `endtime`.
 
@@ -470,14 +470,14 @@ It should not be too surprising that the posterior samples are a little offset f
 
 And when we plot some of the MCMC inferences, again we see there is a slight offset.  But actually, just looking at the noisy data itself, you might notice that there does appear to be a slightly larger noise fluctuation just to the left of the injected truth (for this *specific* noise realization), and that might be what is pushing the model of our bump a little over from where the truth signal lies!
 
-## 2D Gaussian Bump
+## 2D Bump
 
 We have created our very first MCMC, but we also simplified our original three parameter model down to a model of only a single parameter, $t_0$.  Let's add back in the $\sigma$ parameter and figure out what we need to change!  Now let's fix only $A=3.4$, and allow the parameters $t_0$ and $\sigma$ to vary.  But apart from that we are not going to change anything else in our MCMC algorithm - we will still use the same list of [Ingredients](#ingredients)!
 
 This is good practice when cooking our first MCMC - slowly build up in complexity, and run tests as we go, to make sure we understand how our sampler is behaving, and so that we trust our results!
 
 ```{attention}
-For what follows, we will effectively copy/paste all of the code above that we wrote for our [1D Gaussian Bump problem](#1d-gaussian-bump) and use it again!  But necessarily we will have to change a handful of things to now accomodate a model with *two* parameters - so I will point those out as we go!
+For what follows, we will effectively copy/paste all of the code above that we wrote for our [1D Bump problem](#1d-bump) and use it again!  But necessarily we will have to change a handful of things to now accomodate a model with *two* parameters - so I will point those out as we go!
 ```
 
 
@@ -579,7 +579,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Gaussian Bump](../toy_problems.md#the-gaussian-bump).
+Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems.md#the-bump).
 
 With regards to the likelihood,
 > **we still don't need to worry about including the normalization in our definition of the likelihood function here, for the reason we explained above in the 1D problem.**
@@ -944,16 +944,16 @@ plt.show()
     
 
 
-Nice, all of our updates from a one parameter model to a two parameter model seemed to have worked!  We are getting similar looking results as to what we had before in our [1D Gaussian problem](#1d-gaussian-bump), but now we have the posterior on the $\sigma$ parameter as well!
+Nice, all of our updates from a one parameter model to a two parameter model seemed to have worked!  We are getting similar looking results as to what we had before in our [1D problem](#1d-bump), but now we have the posterior on the $\sigma$ parameter as well!
 
 Looking at these three plots, I'd say things still look pretty good by eye!
 
-## 3D Gaussian Bump
+## 3D Bump
 
-Alright, now that we have practiced running our MCMC on slightly simplified versions of our original [Gaussian bump model](../toy_problems.md#the-gaussian-bump), we are ready to run it on the full model - let's vary all three parameters $A$, $t_0$, and $\sigma$!
+Alright, now that we have practiced running our MCMC on slightly simplified versions of our original [bump model](../toy_problems.md#the-bump), we are ready to run it on the full model - let's vary all three parameters $A$, $t_0$, and $\sigma$!
 
 ```{attention}
-For what follows, we will effectively copy/paste all of the code above that we wrote for our [2D Gaussian Bump problem](#2d-gaussian-bump) and use it again!
+For what follows, we will effectively copy/paste all of the code above that we wrote for our [2D Bump problem](#2d-bump) and use it again!
 ```
 
 
@@ -1054,7 +1054,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Gaussian Bump](../toy_problems.md#the-gaussian-bump).
+Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems.md#the-bump).
 
 With regards to the likelihood,
 > **we still don't need to worry about including the normalization in our definition of the likelihood function here, for the reason we explained above in the 1D problem.**

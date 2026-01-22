@@ -11,7 +11,7 @@ Here we will show two possible implementations of a simple in-model jump accepta
 
 The easiest way to track the acceptance of the in-model jumps, is simply to add a counter that starts at zero and increases by one every time an in-model jump is accepted!
 
-Let's use the [full 3D Gaussian Bump problem](../mcmc_1/mcmc_1.md#3d-gaussian-bump) from our 1st MCMC as an example.  Without re-showing everything here, we are just copying, pasting, and re-running all of that code exactly as it was before, with the only new change being made in the MCMC Algorithm section.
+Let's use the [full 3D Bump problem](../mcmc_1/mcmc_1.md#3d-bump) from our 1st MCMC as an example.  Without re-showing everything here, we are just copying, pasting, and re-running all of that code exactly as it was before, with the only new change being made in the MCMC Algorithm section.
 
 ```{attention}
 There are only two new lines of code below:
