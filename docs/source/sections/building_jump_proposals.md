@@ -226,11 +226,11 @@ import numpy as np
 ```python
 # Define a dictionary to store the priors for 3 different parameters
 
-priors = {
-          0: scipy.stats.uniform(loc=3, scale=7),    # loc < x < loc + scale
-          1: scipy.stats.loguniform(a=1e-1, b=1e1),  #   a < x < b
-          2: scipy.stats.norm(loc=5, scale=1),       # loc = mean, scale = standard deviation
-         }
+prior = {
+         0: scipy.stats.uniform(loc=3, scale=7),    # loc < x < loc + scale
+         1: scipy.stats.loguniform(a=1e-1, b=1e1),  #   a < x < b
+         2: scipy.stats.norm(loc=5, scale=1),       # loc = mean, scale = standard deviation
+        }
 ```
 
 Then we will go ahead and use the prior dictionary to construct our forward and reverse jump proposals.  This example model has three parameters, so we draw a new parameter value from each of their respective PDFs, and then calculate the PDF value of those new parameters.
@@ -246,8 +246,8 @@ As was discussed in the [Joint Prior Normalization section](./building_priors/bu
 def jump_F_prior(sample_current):
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
     # NOTE: no actual functional dependence on sample_current!
-    sample_proposed = np.array([priors[0].rvs(), priors[1].rvs(), priors[2].rvs()])
-    pdf_value       = priors[0].pdf(sample_proposed[0]) * priors[1].pdf(sample_proposed[1]) * priors[2].pdf(sample_proposed[2])
+    sample_proposed = np.array([prior[0].rvs(), prior[1].rvs(), prior[2].rvs()])
+    pdf_value       = prior[0].pdf(sample_proposed[0]) * prior[1].pdf(sample_proposed[1]) * prior[2].pdf(sample_proposed[2])
     
     return sample_proposed, pdf_value
 
@@ -257,7 +257,7 @@ def jump_F_prior(sample_current):
 def jump_R_prior(sample_current, sample_proposed):
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
     # NOTE: no actual functional dependence on sample_proposed!
-    pdf_value = priors[0].pdf(sample_current[0]) * priors[1].pdf(sample_current[1]) * priors[2].pdf(sample_current[2])
+    pdf_value = prior[0].pdf(sample_current[0]) * prior[1].pdf(sample_current[1]) * prior[2].pdf(sample_current[2])
     
     return pdf_value
 ```

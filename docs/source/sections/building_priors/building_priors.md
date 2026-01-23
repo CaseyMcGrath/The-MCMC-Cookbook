@@ -28,11 +28,11 @@ Personally, I'm going to choose to build my MCMC priors using a dictionary struc
 ```python
 # Define a dictionary to store the priors for 3 different parameters
 
-priors = {
-          0: scipy.stats.uniform(loc=3, scale=7),    # loc < x < loc + scale
-          1: scipy.stats.loguniform(a=1e-1, b=1e1),  #   a < x < b
-          2: scipy.stats.norm(loc=5, scale=1),       # loc = mean, scale = standard deviation
-         }
+prior = {
+         0: scipy.stats.uniform(loc=3, scale=7),    # loc < x < loc + scale
+         1: scipy.stats.loguniform(a=1e-1, b=1e1),  #   a < x < b
+         2: scipy.stats.norm(loc=5, scale=1),       # loc = mean, scale = standard deviation
+        }
 ```
 
 And that's it!  The great thing about *SciPy*, is that each of these distributions are class objects with pre-defined functions.  Now we can draw random values from each of these prior distributions using the `.rvs` function, and we can evaluate the PDF of these distributions at specified values using `.pdf` function!
@@ -47,16 +47,16 @@ xvals1 = np.linspace(0,13,200)
 xvals2 = np.logspace(-1,1,200)
 
 # Parameter 0
-ax[0].hist(priors[0].rvs(Nsamples), bins=30, density=True)  # Draw random samples from the distribution and plot them
-ax[0].plot(xvals1, priors[0].pdf(xvals1))                   # Calculate the PDF at each specified number in the array
+ax[0].hist(prior[0].rvs(Nsamples), bins=30, density=True)  # Draw random samples from the distribution and plot them
+ax[0].plot(xvals1, prior[0].pdf(xvals1))                   # Calculate the PDF at each specified number in the array
 
 # Parameter 1
-ax[1].hist(priors[1].rvs(Nsamples), bins=30, log=True, density=True, label='Random Samples')
-ax[1].plot(xvals2, priors[1].pdf(xvals2), label='Analytic PDF')
+ax[1].hist(prior[1].rvs(Nsamples), bins=30, log=True, density=True, label='Random Samples')
+ax[1].plot(xvals2, prior[1].pdf(xvals2), label='Analytic PDF')
 
 # Parameter 2
-ax[2].hist(priors[2].rvs(Nsamples), bins=30, density=True)
-ax[2].plot(xvals1, priors[2].pdf(xvals1))
+ax[2].hist(prior[2].rvs(Nsamples), bins=30, density=True)
+ax[2].plot(xvals1, prior[2].pdf(xvals1))
 
 ax[0].set_title('Uniform'), ax[1].set_title('Log-Uniform'), ax[2].set_title('Normal')
 ax[0].set_ylabel('p(x)'), ax[0].set_xlabel('x'), ax[1].set_xlabel('x'), ax[2].set_xlabel('x')
@@ -85,9 +85,9 @@ Now what we want is to define a prior function, where we can input MCMC paramete
 def ln_prior(params):
 
     # Calculate the PDF value of each input parameter for it's corresponding prior distribution
-    prior0 = priors[0].pdf(params[0])
-    prior1 = priors[1].pdf(params[1])
-    prior2 = priors[2].pdf(params[2])
+    prior0 = prior[0].pdf(params[0])
+    prior1 = prior[1].pdf(params[1])
+    prior2 = prior[2].pdf(params[2])
 
     # !!Boundary check!!
     # If any of the parameters land out of their boundary, let's automatically return an effective (numerical) -inf
