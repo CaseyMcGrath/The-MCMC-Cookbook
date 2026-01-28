@@ -131,18 +131,22 @@ jump_scheme_rates = [0.7, 0.3]
 
 ```
 # Choose a Jump scheme
-Jump_forward, Jump_reverse = choose(jump_schemes, jump_scheme_rates)
+jump_forward, jump_reverse = choose(jump_schemes, jump_scheme_rates)
 
 # Draw a new proposed sample
-x_proposed, Jump_proposed = Jump_forward(x_current)
+x_proposed, jump_proposed = jump_forward(x_current)
 
 ...
 
-    # Ok now do Hastings Ratio check
+    #---------------------------
+    # Acceptance Ratio Criteria
+    #---------------------------
     else:
 
-        lnJump_proposed = np.log( Jump_proposed )
-        lnJump_current  = np.log( Jump_reverse(x_current, x_proposed) )
+        lnjump_proposed = np.log( jump_proposed )
+        lnjump_current  = np.log( jump_reverse(x_current, x_proposed) )
+
+        ...
 ```
 
 ````

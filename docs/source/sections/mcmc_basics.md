@@ -40,7 +40,7 @@ The criteria is the "acceptance ratio."  In mathematical notation, you will ofte
 Notice how in the first two terms in the acceptance ratio, the respective prior and likelihood ratios, they are ratios of the proposed parameter sample (in the numerator) to the current parameter sample (in the denominator).  However, in the third term, the jump proposal ratio, *it is the reverse!*  It is the ratio of the current parameter sample to the proposed parameter sample.  Try to digest this, because I think it is easy to lose this understanding in the notation, which is explained more below.
 ```
 $$
-\overbrace{\text{A}\left(\vec{x}_{i+1} | \vec{x}_i \right)}^\text{acceptance ratio} = \text{min}\left[ \ \frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)}{\text{like}\left(\vec{d}|\vec{x}_{i}\right)} \ \frac{\overbrace{\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}^\text{jump proposal}}{\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \quad , \quad 1 \ \right] ,
+\overbrace{\text{A}\left(\vec{x}_{i+1} | \vec{x}_i \right)}^\text{acceptance ratio} = \text{min}\left[ \ \frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)}{\text{like}\left(\vec{d}|\vec{x}_{i}\right)} \ \frac{\overbrace{\text{jump}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}^\text{jump proposal}}{\text{jump}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \quad , \quad 1 \ \right] ,
 $$ (acceptance_ratio)
 
 with each of the following new components:
@@ -49,7 +49,7 @@ with each of the following new components:
 | $\vec{x}_{i}$ | vector | The "current" parameter sample.  An MCMC algorithm is just a giant loop, so we are constantly iterating new samples - hence we need a notation to denote "current" and "proposed."  We will use the indices "$i$" to track this. |
 | $\vec{x}_{i+1}$ | vector | The "proposed" parameter sample.  This is the new sample we are proposing to add to our MCMC's drawn samples. |
 | $\text{A}\left(\vec{x}_{i+1} \| \vec{x}_i \right)$ | function | The "**acceptance ratio**" function.  Take and return whichever is the minimum value between those ratio terms and $1$ in equation {eq}`acceptance_ratio`.  It is calculating the probability that the MCMC sampling algorithm will "accept" or "reject" the proposed sample $\vec{x}_{i+1}$ given the current sample $\vec{x}_{i}$. |
-| $\text{J}\left(\vec{a}\|\vec{b}\right)$ | PDF | The "**jump proposal**" PDF.  It is a function of the input parameter $\vec{a}$ given some starting parameter $\vec{b}$.  I would argue that the true "art" of becoming a master at MCMC is understanding how to create jump proposals that will best suite your problem and enable your MCMC algorithm to most efficiently search the *full* parameter space. More on that to come! |
+| $\text{jump}\left(\vec{a}\|\vec{b}\right)$ | PDF | The "**jump proposal**" PDF.  It is a function of the input parameter $\vec{a}$ given some starting parameter $\vec{b}$.  I would argue that the true "art" of becoming a master at MCMC is understanding how to create jump proposals that will best suite your problem and enable your MCMC algorithm to most efficiently search the *full* parameter space. More on that to come! |
 
 
 ```{important}
@@ -66,7 +66,7 @@ Ok seeing the acceptance ratio equation {eq}`acceptance_ratio` is great, but as 
 
 ```{admonition} Accept new proposed parameter sample $\vec{x}_{i+1}$ only if:
 $$
-\frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)}{\text{like}\left(\vec{d}|\vec{x}_{i}\right)} \ \frac{\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}{\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \ > \ \mathcal{U}\left[0,1\right] ,
+\frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)}{\text{like}\left(\vec{d}|\vec{x}_{i}\right)} \ \frac{\text{jump}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}{\text{jump}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \ > \ \mathcal{U}\left[0,1\right] ,
 $$(acceptance_ratio_code)
 
 or, if we take the natural log of both sides of the equation:
@@ -74,7 +74,7 @@ or, if we take the natural log of both sides of the equation:
 $$
 \begin{align}
     \ln\Bigg(\text{pr}\left(\vec{x}_{i+1}\right) - \text{pr}\left(\vec{x}_{i}\right)\Bigg) \ + \ \ln\Bigg(\text{like}\left(\vec{d}|\vec{x}_{i+1}\right) - \text{like}\left(\vec{d}|\vec{x}_{i}\right)\Bigg) \\  
-    + \ \ln\Bigg(\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right) - \text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)\Bigg) \ > \ \ln\Big(\mathcal{U}\left[0,1\right]\Big) ,
+    + \ \ln\Bigg(\text{jump}\left(\vec{x}_{i}|\vec{x}_{i+1}\right) - \text{jump}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)\Bigg) \ > \ \ln\Big(\mathcal{U}\left[0,1\right]\Big) ,
 \end{align}
 $$(ln_acceptance_ratio_code)
 ```
@@ -93,7 +93,7 @@ Steps 1, 4, and 5 are pretty trivial.  Most of what makes setting up a new MCMC 
 ```
 ```{admonition} The MCMC Algorithm (a high level view)
 1. Initialize a starting parameter sample $\vec{x}_0$ that we will then use to start proposing new samples.
-2. Draw a proposed parameter sample $\vec{x}_{i+1}$ based on the current sample $\vec{x}_{i}$.  This will be done through our jump proposal $J\left(\vec{x}_{i+1} | \vec{x}_{i} \right)$.
+2. Draw a proposed parameter sample $\vec{x}_{i+1}$ based on the current sample $\vec{x}_{i}$.  This will be done through our jump proposal $\text{jump}\left(\vec{x}_{i+1} | \vec{x}_{i} \right)$.
 3. Now use the proposed parameter sample $\vec{x}_{i+1}$ and the current parameter sample $\vec{x}_{i}$ to calculate all of the ratios and terms found in the left-hand side of the acceptance ratio equation {eq}`acceptance_ratio_code`.
 4. Draw a random number from the Uniform distribution to give the right-hand side of the acceptance ratio equation {eq}`acceptance_ratio_code`.
 5. Compare the two final numbers from steps 3. and 4. to decide whether or not to keep or reject the new proposed sample value.

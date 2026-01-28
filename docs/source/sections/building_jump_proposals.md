@@ -22,11 +22,11 @@ Recall that earlier we said that the jump PDF needs to be able to generate new r
 Note there is a little bit of asymmetry here, in the sense that we are saying our **forward** jump needs to be able to do two things, while the **reverse** jump only needs to be able to do one.  This is for two reasons.  One is that we know from the [acceptance ratio criteria](./mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm) both of these things need to be able to calculate a PDF value.  But in addition to that, we said in the [pseudo-code](./mcmc_basics.md#pseudo-code-for-the-mcmc-algorithm) that the forward jump needs to be able to generate new random samples.  Hence we are going to give it *two* tasks!
 ```
 ```{admonition} The "Forward" and "Reverse" Jump PDFs
-$\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)$ is the **"forward jump proposal"**.  It is the PDF value of jumping to the proposed position of parameter space given the *current position* in parameter space.  The forward jump needs to be able to:
+$\text{jump}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)$ is the **"forward jump proposal"**.  It is the PDF value of jumping to the proposed position of parameter space given the *current position* in parameter space.  The forward jump needs to be able to:
 1. Generate a new random parameter sample.
 2. Calculate the PDF value of the proposed sample given the current sample.
 
-$\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)$ is the **"reverse jump proposal"**.  It is the PDF value of jumping to the current position of parameter space given the *proposed position* in parameter space.  The reverse jump needs to be able to:
+$\text{jump}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)$ is the **"reverse jump proposal"**.  It is the PDF value of jumping to the current position of parameter space given the *proposed position* in parameter space.  The reverse jump needs to be able to:
 1. Calculate the PDF value of the current sample given the proposed sample.
 ```
 
@@ -38,7 +38,7 @@ I strongly recommend that you check out {cite:t}`Ellis_2018` for a nice visual e
 [The Gaussian](https://en.wikipedia.org/wiki/Normal_distribution) jump proposal is perhaps the easiest and most common starting point when cooking up an MCMC.  If our model has only a *single* parameter (or if we are creating the jump for just one of our model parameters) then this is the functional form of our Gaussian PDF:
 
 $$
-\text{J}\left(a | b \right) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp\left[-\frac{1}{2}\frac{\left(a - b\right)^2}{\sigma^2}\right]
+\text{jump}\left(a | b \right) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp\left[-\frac{1}{2}\frac{\left(a - b\right)^2}{\sigma^2}\right]
 $$
 
 As a function, it says, "return the value of the PDF at some value $a$, centered at the value of $b$."  So the mean of this Gaussian is $b$, with standard deviation $\sigma$.
@@ -117,7 +117,7 @@ You should notice that no matter how many times you run the cell, actual value o
 [The Multivariate Normal](https://en.wikipedia.org/wiki/Multivariate_normal_distribution) jump proposal is just the generalization of the Gaussian jump proposal for multiple parameters.  If we are creating a jump proposal for *multiple* parameters with dimension $k$, then this is the functional form of our Multivariate Normal PDF:
 
 $$
-\text{J}\left(\vec{a} | \vec{b} \right) = \frac{1}{\sqrt{(2\pi)^k |\Sigma|}} \exp\left[-\frac{1}{2} \left(\vec{a}-\vec{b}\right)^T \Sigma^{-1} \left(\vec{a}-\vec{b}\right)   \right]
+\text{jump}\left(\vec{a} | \vec{b} \right) = \frac{1}{\sqrt{(2\pi)^k |\Sigma|}} \exp\left[-\frac{1}{2} \left(\vec{a}-\vec{b}\right)^T \Sigma^{-1} \left(\vec{a}-\vec{b}\right)   \right]
 $$
 
 Once again, [*SciPy* has this distribution covered](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.multivariate_normal.html#scipy-stats-multivariate-normal), so we don't have to reinvent the wheel here.
@@ -196,11 +196,11 @@ The Gaussian / Multivariate Normal jump proposals are a special type of jump pro
 **Symmetric Jumps** result in the ratio of the reverse to forward jump found in the [acceptance ratio criteria](./mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm) being identically $=1$ because:
 
 $$
-\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right) = \text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right) .
+\text{jump}\left(\vec{x}_{i}|\vec{x}_{i+1}\right) = \text{jump}\left(\vec{x}_{i+1}|\vec{x}_{i}\right) .
 $$
 ```
 
-Did you notice that no matter what, when you run the above cells repeatedly, even though the proposed sample is different every time, and the PDF values themselves are different, the forward and reverse PDFs always match?  This is the reason!  And moreover, you can see mathematically that $J\left(a|b\right) = J\left(b|a\right)$ for the Gaussian jump (and $J\left(\vec{a}|\vec{b}\right) = J\left(\vec{b}|\vec{a}\right)$ for the Multivariate Normal jump).
+Did you notice that no matter what, when you run the above cells repeatedly, even though the proposed sample is different every time, and the PDF values themselves are different, the forward and reverse PDFs always match?  This is the reason!  And moreover, you can see mathematically that $\text{jump}\left(a|b\right) = \text{jump}\left(b|a\right)$ for the Gaussian jump (and $\text{jump}\left(\vec{a}|\vec{b}\right) = \text{jump}\left(\vec{b}|\vec{a}\right)$ for the Multivariate Normal jump).
 
 This is convenient, because if we can prove mathematically that the jump proposal we want to use for our MCMC is symmetric, then we don't really have to spend computation time calculating it in the [acceptance ratio criteria](./mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm).  However, while learning all of this I personally found it really easy to miss this point, and it later caused me confusion when trying to understand how to build symmetric and non-symmetric jumps.  So for the purpose of learning and consistency, for symmetric jump proposals in **The MCMC Cookbook** we will still explicitly write this out and calculate it in our MCMCs (even at the expense of *maybe* adding some unnecessary computation time).
 
@@ -301,10 +301,10 @@ Unlike with the symmetric jump proposals, now you should notice that the forward
 
 There is a rather interesting and helpful observation to make about prior jumps that is unique and offers a deeper insight into what we are doing here.
 
-Let's say that we have no likelihood function, or that we intentionally choose to set our likelihood function to always return the value $\text{like}\left(\vec{d} | \vec{x}\right) = 1$ no matter what set of parameters $\vec{x}$ that we give it.  Now look at equation {eq}`acceptance_ratio`.  The ratio of the likelihood functions is now gone (it is just identically $1$ in this scenario).  If the jump PDF is just equal to the prior PDF, i.e. $\text{J}\left(\vec{a}|\vec{b}\right) = \text{pr}\left(\vec{a}\right)$, then the acceptance ratio simplifies down to only:
+Let's say that we have no likelihood function, or that we intentionally choose to set our likelihood function to always return the value $\text{like}\left(\vec{d} | \vec{x}\right) = 1$ no matter what set of parameters $\vec{x}$ that we give it.  Now look at equation {eq}`acceptance_ratio`.  The ratio of the likelihood functions is now gone (it is just identically $1$ in this scenario).  If the jump PDF is just equal to the prior PDF, i.e. $\text{jump}\left(\vec{a}|\vec{b}\right) = \text{pr}\left(\vec{a}\right)$, then the acceptance ratio simplifies down to only:
 
 $$
-\frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{J}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}{\text{J}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \ = \ \frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{pr}\left(\vec{x}_{i}\right)}{\text{pr}\left(\vec{x}_{i+1}\right)} \ \equiv \ 1 .
+\frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{jump}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)}{\text{jump}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)} \ = \ \frac{\text{pr}\left(\vec{x}_{i+1}\right)}{\text{pr}\left(\vec{x}_{i}\right)} \ \frac{\text{pr}\left(\vec{x}_{i}\right)}{\text{pr}\left(\vec{x}_{i+1}\right)} \ \equiv \ 1 .
 $$
 
 Remember that **Critical Observation** discussed in [The Acceptance Ratio](./mcmc_basics.md#the-acceptance-ratio)?!  Well, here is one of the consequences of that observation!

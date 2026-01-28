@@ -312,7 +312,7 @@ for i in tqdm(range(1,Nsample)):
 
     # Propose NEW sample (and calculate it's FORWARD jump PDF)
     # --> (Pseudo-Code Steps 2, 3)
-    x_proposed, Jump_proposed = jump_F_MultivariateNorm(x_current)
+    x_proposed, jump_proposed = jump_F_MultivariateNorm(x_current)
 
     #-------------
     # Prior Check
@@ -335,7 +335,7 @@ for i in tqdm(range(1,Nsample)):
         lnlike_proposed = ln_like(x_proposed, data, sigma_n, times)
         lnlike_current  = ln_like(x_current,  data, sigma_n, times)
 
-        lnjump_proposed = np.log( Jump_proposed )
+        lnjump_proposed = np.log( jump_proposed )
         lnjump_current  = np.log( jump_R_MultivariateNorm(x_current, x_proposed) )
     
         # Draw random number from Uniform Dist
