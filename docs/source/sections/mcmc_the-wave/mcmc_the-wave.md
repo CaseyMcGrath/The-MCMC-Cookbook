@@ -1,4 +1,4 @@
-# MCMC 2
+# MCMC: The Wave
 
 Let's practice making an MCMC for a model that contains a **cyclic parameter**!
 
