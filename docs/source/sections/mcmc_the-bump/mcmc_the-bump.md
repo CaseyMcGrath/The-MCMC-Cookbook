@@ -411,7 +411,7 @@ c = ChainConsumer()
 
 chain = Chain(samples = PD_samples_final,
               columns = label,
-              name    = "MCMC 1 (1 parameter)",
+              name    = "MCMC: 1D Bump",
               )
 
 c.add_chain(chain)
@@ -891,7 +891,7 @@ c = ChainConsumer()
 
 chain = Chain(samples = PD_samples_final,
               columns = label,
-              name    = "MCMC 1 (2 parameters)",
+              name    = "MCMC: 2D Bump",
               )
 
 c.add_chain(chain)
@@ -1358,7 +1358,7 @@ c = ChainConsumer()
 
 chain = Chain(samples = PD_samples_final,
               columns = label,
-              name    = "MCMC 1 (3 parameters)",
+              name    = "MCMC: 3D Bump",
               )
 
 c.add_chain(chain)

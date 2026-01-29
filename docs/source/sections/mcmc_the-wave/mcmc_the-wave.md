@@ -460,7 +460,7 @@ c = ChainConsumer()
 
 chain = Chain(samples = PD_samples_final,
               columns = label,
-              name    = "MCMC 2",
+              name    = "MCMC: The Wave",
               )
 
 c.add_chain(chain)
