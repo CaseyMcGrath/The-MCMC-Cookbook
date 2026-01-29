@@ -34,7 +34,7 @@ Here are the ingredients that we are going to use in this MCMC:
 
 ## The Wave
 
-We will start with [The Wave problem](../toy_problems.md#the-wave).  We will copy/paste all of the same code we used before for [The Bump problem](../mcmc_1/mcmc_1.md#3d-bump), but [modify it appropriately](../cyclic_parameters.md) to handle the model's cyclic parameter!
+We will start with [The Wave problem](../toy_problems.md#the-wave).  We will copy/paste all of the same code we used before for [The Bump problem](../mcmc_the-bump/mcmc_the-bump.md#3d-bump), but [modify it appropriately](../cyclic_parameters.md) to handle the model's cyclic parameter!
 
 
 ```python

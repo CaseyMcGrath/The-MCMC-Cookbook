@@ -1,7 +1,7 @@
 # Tracking Diagnostic: In-Model Jump Acceptance
 
 ```{tip}
-Note in our [1st MCMC](../mcmc_1/mcmc_1.md), we simply judged our results qualitatively by eye.  It would be much better to begin quantifying our algorithm's performance.
+Note in our [1st MCMC](../mcmc_the-bump/mcmc_the-bump.md), we simply judged our results qualitatively by eye.  It would be much better to begin quantifying our algorithm's performance.
 ```
 One basic diagnostic that is useful to keep track of (and easy to implement) is a way to see how often an (in-model) jump proposal is accepted or rejected as the MCMC algorithm iterates.  Keeping track of the **in-model jump acceptance ratio** can then help us better understand  *quantitatively* how well our sampler is working.  As we are building our MCMC and running it and testing it, we can make changes and see how that effects the efficiency of our sampler using a diagnostic like this one.
 
@@ -11,7 +11,7 @@ Here we will show two possible implementations of a simple in-model jump accepta
 
 The easiest way to track the acceptance of the in-model jumps, is simply to add a counter that starts at zero and increases by one every time an in-model jump is accepted!
 
-Let's use the [full 3D Bump problem](../mcmc_1/mcmc_1.md#3d-bump) from our 1st MCMC as an example.  Without re-showing everything here, we are just copying, pasting, and re-running all of that code exactly as it was before, with the only new change being made in the MCMC Algorithm section.
+Let's use the [full 3D Bump problem](../mcmc_the-bump/mcmc_the-bump.md#3d-bump) from our 1st MCMC as an example.  Without re-showing everything here, we are just copying, pasting, and re-running all of that code exactly as it was before, with the only new change being made in the MCMC Algorithm section.
 
 ```{attention}
 There are only two new lines of code below:

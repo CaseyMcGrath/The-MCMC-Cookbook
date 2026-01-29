@@ -1,4 +1,4 @@
-# MCMC 1
+# MCMC: The Bump
 
 Alright, we finally have enough background to cook up our first MCMC!
 
