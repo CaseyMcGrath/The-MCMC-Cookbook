@@ -24,6 +24,7 @@ extensions = [
     "sphinx_design",          # https://myst-parser.readthedocs.io/en/latest/intro.html#extending-sphinx
     #"myst_nb",                # https://myst-nb.readthedocs.io/en/latest/quickstart.html 
     "sphinx_copybutton",      # https://sphinx-copybutton.readthedocs.io/en/latest/
+    "sphinx_favicon",         # https://sphinx-favicon.readthedocs.io/en/stable/quickstart.html#quickstart 
 ]
 
 myst_enable_extensions = ["dollarmath", "amsmath", "tasklist"]  # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
@@ -44,6 +45,7 @@ bibtex_bibfiles = ['references.bib']
 html_theme = 'sphinx_book_theme'
 html_static_path = ['_static']
 html_title = "The MCMC Cookbook"
+html_logo = "_static/MCMC_Cookbook.svg"
 
 
 html_theme_options = {
@@ -51,4 +53,6 @@ html_theme_options = {
     "use_repository_button": True,
 }
 
+
+favicons = ["MCMC_Cookbook_favicon.svg"]
 
