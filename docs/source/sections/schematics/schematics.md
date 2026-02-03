@@ -8,7 +8,7 @@ Our MCMC sampler algorithm also needs to be able to step through various size an
 
 ## MCMC
 
-A visual schematic of (standard) MCMC.  For every iteration of the sampler, we draw a new proposed parameter sample $\vec{x}_{i+1}$ and use the [acceptance ratio criteria](../mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm) to decide if we accept or reject the sample.  We will call this an "**in-model move**," because we are simply proposing a new set of parameters to "move" to for the given model we are fitting to our data.
+A visual schematic of [(standard) MCMC](../mcmc_basics.md).  For every iteration of the sampler, we draw a new proposed parameter sample $\vec{x}_{i+1}$ and use the [acceptance ratio criteria](../mcmc_basics.md#translation-to-code-the-heart-of-the-mcmc-algorithm) to decide if we accept or reject the sample.  We will call this an "**in-model move**," because we are simply proposing a new set of parameters to "move" to for the given model we are fitting to our data.
 
 ![svg](schematic_mcmc.svg)
 
@@ -26,13 +26,13 @@ $$
 
 ## Parallel Tempered MCMC (PTMCMC)
 
-A visual schematic of parallel tempered MCMC.  This builds upon the structure first created with a standard MCMC, but now we create multiple copies of that MCMC - each one assigned to a "temperature."  Each MCMC copy runs in parallel, and the only other addition we now have to make in the algorithm is at every iteration we make a "**temperature swap move**," after we make our normal in-model move.
+A visual schematic of [parallel tempered MCMC](../ptmcmc_basics.md).  This builds upon the structure first created with a standard MCMC, but now we create multiple copies of that MCMC - each one assigned to a "temperature."  Each MCMC copy runs in parallel, and the only other addition we now have to make in the algorithm is at every iteration we make a "**temperature swap move**," after we make our normal in-model move.
 
 ```{important}
-In PTMCMC, only the parameter samples of the lowest temperature are what matter in the final results!  Hence in the schematic below, we have highlighted its row.  The higher temperature exist purely for the sake of this algorithm, and while they might be useful for final diagnostic checks, they will never be used or reported in the final analysis of the posterior!
+In PTMCMC, only the parameter samples of the lowest temperature (the $T=1$ temperature, indexed below as $T_0$) are what matter in the final results!  Hence in the schematic below, we have highlighted its row.  The higher temperature exist purely for the sake of this algorithm, and while they might be useful for final diagnostic checks, they will never be used or reported in the final analysis of the posterior!
 ```
 
-The basic idea of the temperature swap move is that we pick two adjacent temperatures, and we use the temperature acceptance ratio criteria to decide if we accept or reject the sample swap between temperatures.  This gets repeated for consecutive adjacent temperatures for every iteration (then repeats once it reaches the highest two temperatures).  Different and more complicated methods can be used to pick which temperatures are selected for swapping, but shown here is the simplest one.
+The basic idea of the temperature swap move is that we pick two adjacent temperatures, and we use the [temperature acceptance ratio criteria](../ptmcmc_basics.md#translation-to-code-the-heart-of-the-parallel-tempering-algorithm) to decide if we accept or reject the sample swap between temperatures.  This gets repeated for consecutive adjacent temperatures for every iteration (then repeats once it reaches the highest two temperatures).  Different and more complicated methods can be used to pick which temperatures are selected for swapping, but shown here is the simplest one.
 
 In practice, we may not choose to make a temperature swap move at *every* iteration as depicted in the diagram.  This figure is to understand the general structure of PTMCMC.
 

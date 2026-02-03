@@ -101,8 +101,10 @@ We can actually just keep all of the same steps we wrote down before for our [MC
 
 ## Additional Notes about PTMCMC
 
+{cite:t}`Vousden_2016` is a helpful resource for learning more about PTMCMC.  It is a paper devoted to discussing how to construct more advanced parallel tempering set-ups.
+
 The parallel tempering algorithm steps themselves have some general flexibility in how they are practically implemented:
 
 - The temperature swaps do not have to happen at every step (like what is [visually shown here](./schematics/schematics.md#parallel-tempered-mcmc-ptmcmc)).  Depending on the problem and how many temperatures are being used, it might be beneficial to only periodically propose temperature swaps, to allow the MCMC sampler enough time to explore the local parameter space before it potentially makes large tempered jumps.
 - There are different approaches to choosing which temperatures are selected for a proposed swap.  It is typically recommended that the temperatures are adjacent, otherwise the probability of accepting a temperature swap between two widely separated tempered MCMCs might be very low.  But we could cycle from low to high temperatures (as [shown here](./schematics/schematics.md#parallel-tempered-mcmc-ptmcmc)), from high to low, or even randomly.
-- The temperatures coudl be static or dynamic!  Static temperatures are much easier to implement, while dynamically changing temperatures which evolve as the MCMC algorithm progresses are more sophisticated.
+- The temperatures could be static or dynamic!  Static temperatures are much easier to implement, while dynamically changing temperatures which evolve as the MCMC algorithm progresses are more sophisticated.  Dynamically adjusting temperatures are the main focus of {cite:t}`Vousden_2016`.
