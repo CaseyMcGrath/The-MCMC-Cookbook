@@ -188,7 +188,7 @@ def ln_like(param, data, sigma_n, times):
     return (- (data - M)**2 / (2*sigma_n**2)).sum()
 ```
 
-Let's do a couple of quick sanity checks, just to basically make sure that our functions are working the way we expect:
+**Sanity Check:** Let's test the output of our prior and likelihood functions to make sure that they work the way we expect:
 
 
 ```python
@@ -357,7 +357,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:16<00:00, 2607.54it/s]
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:14<00:00, 2695.04it/s]
 
 
 
@@ -383,13 +383,25 @@ label = [r'$A$', r'$\phi_0$', r'$f_0$']
 #--------------
 
 fig, ax = plt.subplots(Ndim,1,figsize=(12,2*Ndim), sharex=True)
-plt.subplots_adjust(hspace=0.05)
+plt.subplots_adjust(hspace=0.1)
 
+# Set-up axes to match priors
+# --> scale the y-axis to the prior search scale
+ax[0].set_yscale('log'), ax[2].set_yscale('log')
+# --> grab the upper/lower limits for each prior
+ax[0].set_ylim([prior['A'].a, prior['A'].b]), ax[1].set_ylim([prior['phi0'].support()[0], prior['phi0'].support()[1]]), ax[2].set_ylim([prior['f0'].a, prior['f0'].b])
+
+# Plot samples
 for i in range(Ndim):
     ax[i].scatter(np.arange(0,Nsample,1), x_samples[:,i], s=0.5)
+    
+    # Plot injections
     ax[i].axhline(injection[i], color='k', linestyle='--')
+
+    # y-axis labels
     ax[i].set_ylabel(label[i], fontsize=12)
 
+# Titles/Labels
 ax[-1].set_xlabel('Iteration', fontsize=12)
 ax[0].set_title('Burn-in')
 
@@ -410,12 +422,13 @@ plt.show()
 
 fig, ax = plt.subplots(1,1,figsize=(12,2), sharex=True)
 plt.subplots_adjust(hspace=0.05)
+ax.set_ylim([0,1])
 
 ax.scatter(np.arange(1,Nsample,1), jump_acceptance_ratio_inmodel, s=0.5)
-ax.set_ylabel('In-Model Jump\nAcceptance Ratio', fontsize=12)
 ax.text(0.86, 0.82, 'Average = {0:0.2f}'.format(jump_acceptance_ratio_inmodel.mean()), transform=ax.transAxes, bbox=dict(color='white',ec='k'));
 
-ax.set_xlabel('Iteration', fontsize=12)
+# Titles/Labels
+ax.set_xlabel('Iteration', fontsize=12), ax.set_ylabel('In-Model Jump\nAcceptance Ratio', fontsize=12)
 ax.set_title('Tracking Diagnostics')
 ax.grid()
 
@@ -433,7 +446,7 @@ Now that we have an idea of how long it took our sampler to burn-in, let's throw
 
 ```python
 # Discard (burn) samples
-burn = 20_000
+burn = 60_000
 
 # Final posterior samples
 # --> we will save two copies of the final samples: 
@@ -486,6 +499,7 @@ Let's also look examples of the MCMC inferences.
 
 fig, ax = plt.subplots(1,1,figsize=(8,5))
 
+# plot the data
 ax.plot(times, data,   color='gray', alpha=0.5, label='data')
 
 # Randomly select a subset of parameter samples
@@ -496,14 +510,19 @@ for ind in indices:
     model = Model(*x_samples_final[ind,:], times)
     ax.plot(times, model, color='r', alpha=2/nselect)
 
+# plot the signal
 ax.plot(times, signal, color='C0', label='signal')
 
-# Manually add the 'MCMC inferences' line to the legend
+# Titles/Labels
+ax.set_title('MCMC Inferences')
+
+# --> manually add the 'MCMC inferences' line to the legend
 handles, labels = ax.get_legend_handles_labels()
-line = Line2D([0], [0], label='MCMC inferences', color='r')
+line = Line2D([0], [0], label='MCMC samples', color='r')
 handles.extend([line])
 
 ax.legend(handles=handles), ax.set_xlabel('time', fontsize=12)
+
 plt.show()
 ```
 

@@ -4,7 +4,7 @@ Alright, we finally have enough background to cook up our first MCMC!
 
 ## Ingredients
 
-Here is the list of ingredients that we are going to use in this MCMC:
+Here are the ingredients that we are going to use in this MCMC:
 
 ````{tab-set}
 
@@ -178,7 +178,7 @@ def ln_like(param, data, sigma_n, times):
     return (- (data - M)**2 / (2*sigma_n**2)).sum()
 ```
 
-Let's do a couple of quick sanity checks, just to basically make sure that our functions are working the way we expect:
+**Sanity Check:** Let's test the output of our prior and likelihood functions to make sure that they work the way we expect:
 
 
 ```python
@@ -341,7 +341,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [02:26<00:00, 1369.12it/s]
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [02:13<00:00, 1493.06it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -363,10 +363,17 @@ label = [r'$t_0$']
 #--------------
 
 fig, ax = plt.subplots(1,1,figsize=(12,2), sharex=True)
-plt.subplots_adjust(hspace=0.05)
 
+# Set-up axes to match priors
+# --> grab the upper/lower limits for each prior
+ax.set_ylim([prior['t0'].support()[0], prior['t0'].support()[1]])
+
+# Plot samples
 ax.scatter(np.arange(0,Nsample,1), x_samples, s=0.5)
+# Plot injection
 ax.axhline(injection, color='k', linestyle='--')
+
+# Titles/Labels
 ax.set_ylabel(label[0], fontsize=12), ax.set_xlabel('Iteration', fontsize=12)
 ax.set_title('Burn-in')
 
@@ -437,6 +444,7 @@ Let's also look examples of the MCMC inferences.
 
 fig, ax = plt.subplots(1,1,figsize=(8,5))
 
+# plot the data
 ax.plot(times, data,   color='gray', alpha=0.5, label='data')
 
 # Randomly select a subset of parameter samples
@@ -447,14 +455,19 @@ for ind in indices:
     model = Model(x_samples_final[ind,:], times)
     ax.plot(times, model, color='r', alpha=2/nselect)
 
+# plot the signal
 ax.plot(times, signal, color='C0', label='signal')
+
+# Titles/Labels
+ax.set_title('MCMC Inferences')
 
 # Manually add the 'MCMC inferences' line to the legend
 handles, labels = ax.get_legend_handles_labels()
-line = Line2D([0], [0], label='MCMC inferences', color='r')
+line = Line2D([0], [0], label='MCMC samples', color='r')
 handles.extend([line])
 
 ax.legend(handles=handles), ax.set_xlabel('time', fontsize=12)
+
 plt.show()
 ```
 
@@ -631,7 +644,7 @@ def ln_like(param, data, sigma_n, times):
     return (- (data - M)**2 / (2*sigma_n**2)).sum()
 ```
 
-Let's do a couple of quick sanity checks, just to basically make sure that our functions are working the way we expect:
+**Sanity Check:** Let's test the output of our prior and likelihood functions to make sure that they work the way we expect:
 
 
 ```python
@@ -810,7 +823,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [00:54<00:00, 3680.03it/s]
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [00:55<00:00, 3615.38it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -840,13 +853,26 @@ label = [r'$t_0$', r'$\sigma$']
 #--------------
 
 fig, ax = plt.subplots(Ndim,1,figsize=(12,2*Ndim), sharex=True)
-plt.subplots_adjust(hspace=0.05)
+plt.subplots_adjust(hspace=0.1)
 
+# Set-up axes to match priors
+# --> scale the y-axis to the prior search scale
+ax[1].set_yscale('log')
+# --> grab the upper/lower limits for each prior
+ax[0].set_ylim([prior['t0'].support()[0], prior['t0'].support()[1]]), ax[1].set_ylim([prior['sigma'].a, prior['sigma'].b])
+
+
+# Plot samples
 for i in range(Ndim):
     ax[i].scatter(np.arange(0,Nsample,1), x_samples[:,i], s=0.5)
+
+    # Plot injections
     ax[i].axhline(injection[i], color='k', linestyle='--')
+
+    # y-axis labels
     ax[i].set_ylabel(label[i], fontsize=12)
 
+# Titles/Labels
 ax[-1].set_xlabel('Iteration', fontsize=12)
 ax[0].set_title('Burn-in')
 
@@ -917,6 +943,7 @@ Let's also look examples of the MCMC inferences.
 
 fig, ax = plt.subplots(1,1,figsize=(8,5))
 
+# plot the data
 ax.plot(times, data,   color='gray', alpha=0.5, label='data')
 
 # Randomly select a subset of parameter samples
@@ -927,14 +954,19 @@ for ind in indices:
     model = Model(*x_samples_final[ind,:], times)
     ax.plot(times, model, color='r', alpha=2/nselect)
 
+# plot the signal
 ax.plot(times, signal, color='C0', label='signal')
+
+# Titles/Labels
+ax.set_title('MCMC Inferences')
 
 # Manually add the 'MCMC inferences' line to the legend
 handles, labels = ax.get_legend_handles_labels()
-line = Line2D([0], [0], label='MCMC inferences', color='r')
+line = Line2D([0], [0], label='MCMC samples', color='r')
 handles.extend([line])
 
 ax.legend(handles=handles), ax.set_xlabel('time', fontsize=12)
+
 plt.show()
 ```
 
@@ -1108,7 +1140,7 @@ def ln_like(param, data, sigma_n, times):
     return (- (data - M)**2 / (2*sigma_n**2)).sum()
 ```
 
-Let's do a couple of quick sanity checks, just to basically make sure that our functions are working the way we expect:
+**Sanity Check:** Let's test the output of our prior and likelihood functions to make sure that they work the way we expect:
 
 
 ```python
@@ -1279,7 +1311,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:14<00:00, 2691.06it/s]
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:14<00:00, 2685.38it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -1307,13 +1339,25 @@ label = [r'$A$', r'$t_0$', r'$\sigma$']
 #--------------
 
 fig, ax = plt.subplots(Ndim,1,figsize=(12,2*Ndim), sharex=True)
-plt.subplots_adjust(hspace=0.05)
+plt.subplots_adjust(hspace=0.1)
 
+# Set-up axes to match priors
+# --> scale the y-axis to the prior search scale
+ax[0].set_yscale('log'), ax[2].set_yscale('log')
+# --> grab the upper/lower limits for each prior
+ax[0].set_ylim([prior['A'].a, prior['A'].b]), ax[1].set_ylim([prior['t0'].support()[0], prior['t0'].support()[1]]), ax[2].set_ylim([prior['sigma'].a, prior['sigma'].b])
+
+# Plot samples
 for i in range(Ndim):
     ax[i].scatter(np.arange(0,Nsample,1), x_samples[:,i], s=0.5)
+    
+    # Plot injections
     ax[i].axhline(injection[i], color='k', linestyle='--')
+
+    # y-axis labels
     ax[i].set_ylabel(label[i], fontsize=12)
 
+# Titles/Labels
 ax[-1].set_xlabel('Iteration', fontsize=12)
 ax[0].set_title('Burn-in')
 
@@ -1384,6 +1428,7 @@ Let's also look examples of the MCMC inferences.
 
 fig, ax = plt.subplots(1,1,figsize=(8,5))
 
+# plot the data
 ax.plot(times, data,   color='gray', alpha=0.5, label='data')
 
 # Randomly select a subset of parameter samples
@@ -1394,14 +1439,19 @@ for ind in indices:
     model = Model(*x_samples_final[ind,:], times)
     ax.plot(times, model, color='r', alpha=2/nselect)
 
+# plot the signal
 ax.plot(times, signal, color='C0', label='signal')
 
-# Manually add the 'MCMC inferences' line to the legend
+# Titles/Labels
+ax.set_title('MCMC Inferences')
+
+# --> manually add the 'MCMC inferences' line to the legend
 handles, labels = ax.get_legend_handles_labels()
-line = Line2D([0], [0], label='MCMC inferences', color='r')
+line = Line2D([0], [0], label='MCMC samples', color='r')
 handles.extend([line])
 
 ax.legend(handles=handles), ax.set_xlabel('time', fontsize=12)
+
 plt.show()
 ```
 
