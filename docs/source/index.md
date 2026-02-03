@@ -78,6 +78,7 @@ sections/cyclic_parameters
 
 sections/mcmc_the-wave/mcmc_the-wave
 sections/multiple_jump_schemes/multiple_jump_schemes
+sections/mcmc_multi-bump/mcmc_multi-bump
 
 sections/ptmcmc_basics
 

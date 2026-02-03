@@ -124,7 +124,8 @@ def jump_R_<name>(sample_current, sample_proposed):
 jump_schemes      = [[jump_F_MultivariateNorm, jump_R_MultivariateNorm], 
                      [jump_F_prior,            jump_R_prior   ]]
 
-jump_scheme_rates = [0.7, 0.3]
+jump_scheme_rates = [0.7,
+                     0.3]
 ```
 
 4.  Inside of the main MCMC loop, use the new `choose` function to randomly select a set of forward/reverse jump functions, then use them as before to calculate the necessary quantities.  This will look something like:
