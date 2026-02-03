@@ -73,8 +73,8 @@ or, if we take the natural log of both sides of the equation:
 
 $$
 \begin{align}
-    \ln\Bigg(\text{pr}\left(\vec{x}_{i+1}\right) - \text{pr}\left(\vec{x}_{i}\right)\Bigg) \ + \ \ln\Bigg(\text{like}\left(\vec{d}|\vec{x}_{i+1}\right) - \text{like}\left(\vec{d}|\vec{x}_{i}\right)\Bigg) \\  
-    + \ \ln\Bigg(\text{jump}\left(\vec{x}_{i}|\vec{x}_{i+1}\right) - \text{jump}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)\Bigg) \ > \ \ln\Big(\mathcal{U}\left[0,1\right]\Big) ,
+    \Bigg(\ln\bigg[\text{pr}\left(\vec{x}_{i+1}|\vec{d}\right)\bigg] - \ln\bigg[\text{pr}\left(\vec{x}_{i}|\vec{d}\right)\bigg]\Bigg) \ + \ \Bigg(\ln\bigg[\text{like}\left(\vec{d}|\vec{x}_{i+1}\right)\bigg] - \ln\bigg[\text{like}\left(\vec{d}|\vec{x}_{i}\right)\bigg]\Bigg) \\  
+    + \ \Bigg(\ln\bigg[\text{jump}\left(\vec{x}_{i}|\vec{x}_{i+1}\right)\bigg] - \ln\bigg[\text{jump}\left(\vec{x}_{i+1}|\vec{x}_{i}\right)\bigg]\Bigg) \ > \ \ln\bigg[\mathcal{U}\left[0,1\right]\bigg] ,
 \end{align}
 $$(ln_acceptance_ratio_code)
 ```
