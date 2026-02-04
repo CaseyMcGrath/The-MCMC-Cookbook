@@ -91,10 +91,12 @@ We can actually just keep all of the same steps we wrote down before for our [MC
 5. Compare the two final numbers from steps 3. and 4. to decide whether or not to keep or reject the new proposed sample value.
 
 **Parallel Tempering**
-1. At each iteration, loop all of the MCMC steps, but with with tempered likelihoods.
-2. Draw a random number from the Uniform distribution to give the right-hand side of the temperature acceptance ratio equation {eq}`temperature_acceptance_ratio_code`.
-3. Select two temperatures and their current parameter samples, to calculate the ratio in the left-hand side of the temperature acceptance ratio equation {eq}`temperature_acceptance_ratio`.
-4. Compare the two final numbers from steps 2. and 3. to decide whether or not the temperatures swap parameter values.
+1. Create a list of the desired temperatures for each MCMC copy, with $T_0 = 1$.
+2. At each iteration, loop all of the MCMC steps, but with with tempered likelihoods.
+3. Draw a random number from the Uniform distribution to give the right-hand side of the temperature acceptance ratio equation {eq}`temperature_acceptance_ratio_code`.
+4. Select two temperatures and their current parameter samples, to calculate the ratio in the left-hand side of the temperature acceptance ratio equation {eq}`temperature_acceptance_ratio`.
+5. Compare the two final numbers from steps 2. and 3. to decide whether or not the temperatures swap parameter values.
+
 ```
 
 [Parallel Tempered MCMC (PTMCMC)](./schematics/schematics.md#parallel-tempered-mcmc-ptmcmc) shows a **visual schematic** of this general structure.  As always, we just repeat this process for a huge number of iterations until we believe that we have samples that accurately represent our posterior distribution!
