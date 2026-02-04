@@ -88,7 +88,7 @@ For this problem we want to simulate a dataset with *two* bumps in it so we crea
 
 # Inject the true values of the parameters we will try to recover!
 injection = [[3.4, 7.6, 0.5],
-             [5.4, 17.7, 0.2]]
+             [4.7, 17.5, 0.2]]
 
 # calculate the signal from the model
 signal = np.zeros_like(times)
@@ -188,11 +188,12 @@ def ln_like(param, data, sigma_n, times):
 
 **Sanity Check:** Let's test the output of our prior and likelihood functions to make sure that they work the way we expect:
 
+```{hint}
+Notice in particular the difference in the values of the log-likelihood at injection 1 vs. injection 2.  The actual value of the log-likelihood at the first bump (injection 1) is smaller than at the second bump (injection 2).  This already should help to build our intuition for what is going to happen when we run the MCMC algorithm.  Because the second bump has more support in the log-likelihood, our MCMC should find in the final posterior *more* support for the second bump as compared to the first bump.
+```
+
 ```{margin}
 Note, our log-prior and log-likelihood functions as we have defined them here are only equiped to take as input one set of parameters for the bump model at a time.  So for our quick check here we are looking at the values of the log-prior/log-likelihood evaluated at each individual injection.
-
-**Key Insight**
-Notice in particular the difference in the values of the log-likelihood at injection 1 vs. injection 2.  The actual value of the log-likelihood at the first bump (injection 1) is smaller than at the second bump (injection 2).  This already should help to build our intuition for what is going to happen when we run the MCMC algorithm.  Because the second bump has more support in the log-likelihood (both bumps have roughly the same support in their log-priors, so that doesn't matter as much for this example) then our MCMC should find in the final posterior *more* support for the second bump compared to the first bump.
 ```
 
 
@@ -207,9 +208,9 @@ print(r"--> log-likelihood of injection 2 = {0:0.4f}".format(ln_like(injection[1
 
     Quick checks:
     --> log-prior of injection 1      = -6.5807
-    --> log-prior of injection 2      = -6.1271
+    --> log-prior of injection 2      = -5.9882
     --> log-prior out of prior range  = -1.0000e+300
-    --> log-likelihood of injection 1 = -107.5459
+    --> log-likelihood of injection 1 = -99.7395
     --> log-likelihood of injection 2 = -98.6449
 
 
@@ -392,7 +393,7 @@ x_samples = np.zeros((Nsample, Ndim))
 
 # Initialize in-model jump tracking diagnostic (dynamic counter)
 # --> store 0 (jump rejected) or 1 (jump accepted)
-jump_counter_inmodel = np.zeros(Nsample-1)
+counter_jump_inmodel = np.zeros(Nsample-1)
 
 # Starting sample
 # --> (Pseudo-Code Step 1)
@@ -457,19 +458,19 @@ for i in tqdm(range(1,Nsample)):
             # accept the proposed sample
             x_samples[i,:] = x_proposed
             # update the in-model jump tracking diagnostic
-            jump_counter_inmodel[i-1] = 1
+            counter_jump_inmodel[i-1] = 1
         else:
             # keep the current sample
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:14<00:00, 2681.64it/s]
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:17<00:00, 2588.29it/s]
 
 
 
 ```python
 # Calculate the in-model jump acceptance ratio (dynamic)
-jump_acceptance_ratio_inmodel = np.cumsum(jump_counter_inmodel) / np.arange(1,Nsample,1)
+jump_acceptance_ratio_inmodel = np.cumsum(counter_jump_inmodel) / np.arange(1,Nsample,1)
 ```
 
 ### Result Plots
@@ -521,7 +522,7 @@ plt.show()
 
 
     
-![png](output_42_0.png)
+![png](output_41_0.png)
     
 
 
@@ -532,7 +533,6 @@ plt.show()
 #-----------------------
 
 fig, ax = plt.subplots(1,1,figsize=(12,2), sharex=True)
-plt.subplots_adjust(hspace=0.05)
 ax.set_ylim([0,1])
 
 ax.scatter(np.arange(1,Nsample,1), jump_acceptance_ratio_inmodel, s=0.5)
@@ -548,7 +548,7 @@ plt.show()
 
 
     
-![png](output_43_0.png)
+![png](output_42_0.png)
     
 
 
@@ -576,6 +576,8 @@ Create the final corner plot of the posterior samples.
 
 ```{margin}
 With *ChainConsumer*, we can add multiple truth markers and adjust their appearance, which is really convenient!
+
+Another very cool feature of *ChainConsumer* is that we can identify when we think there are multiple modes in the data, and it will search for their respective intervals!
 ```
 
 
@@ -586,9 +588,10 @@ With *ChainConsumer*, we can add multiple truth markers and adjust their appeara
 
 c = ChainConsumer()
 
-chain = Chain(samples = PD_samples_final,
-              columns = label,
-              name    = "MCMC: Multi-Bump",
+chain = Chain(samples    = PD_samples_final,
+              columns    = label,
+              name       = "MCMC: Multi-Bump",
+              multimodal = True,
               )
 
 c.add_chain(chain)
@@ -601,7 +604,7 @@ c.plotter.plot();
 
 
     
-![png](output_47_0.png)
+![png](output_46_0.png)
     
 
 
@@ -624,7 +627,7 @@ indices = np.random.randint(len(x_samples_final), size=nselect)
 # Now feed those parameters back into the model and see how they look plotted on our data
 for ind in indices:
     model = Model(*x_samples_final[ind,:], times)
-    ax.plot(times, model, color='r', alpha=2/nselect)
+    ax.plot(times, model, color='r', alpha=4/nselect)
 
 # plot the signal
 ax.plot(times, signal, color='C0', label='signal')
@@ -644,18 +647,17 @@ plt.show()
 
 
     
-![png](output_49_0.png)
+![png](output_48_0.png)
     
 
 
-So let's discuss what happened here.  Our current MCMC is working fine - it is not broken!  But we now have a multi-modal problem, and the sampler is struggling to properly explore all of the modes successfully.  Perhaps not surpisingly based on the [**Key Insight** we mentioned above](#prior-and-likelihood), the sampler is more easily able to find and explore the mode that has the higher support from our log-likelihood function, which is the second bump here.
+So let's discuss what happened here.  We have a multi-modal problem, and for this particular example, our MCMC algorithm managed to find both of the modes.  Additionally, confirming our earlier [**Hint** we mentioned above](#prior-and-likelihood), we see that the sampler found more support (and thus, had a slightly easier time exploring) the second bump thanks to it having more support than the first bump in our log-likelihood function.
 
 If we re-run this sampler without any changes, then we might see that occasionally the sampler will explore the first bump.  But once it proposes a jump in parameter space that lands it close to the second bump, it will have a harder time jumping back to the first bump.
 
-```{hint}
-**Try on Your Own**
+```{admonition} Homework!
 
-Try playing around with this a little on your own and see if you can make *this* sampler work any better.  For example, try changing the ratio of the rates that we are using to specify the two jump schemes that we have employed.  What happens if you make prior jumps more often?  Also try running the sampler multiples, or for more iterations.
+Try playing around with this problem a little on your own and see if you can test the limitations of this sampler.  For example, try changing the ratio of the rates that we are using to specify the two jump schemes that we have employed.  What happens if you make prior jumps more often?
 
-Another thing to try, adjust the values of the injected parameters themselves!  Try injecting two identical bumps.  Try injecting two bumps whose log-likelihood values are very nearly the same (refer back to the [**Key Insight** mentioned above](#prior-and-likelihood)).  Will this set-up work more successfully when you have different bumps in your data?
+Additionally, try adjusting the values of the injected parameters themselves!  Try injecting two identical bumps.  Try injecting two bumps whose log-likelihood values have a greater difference (refer back to the [**Hint** mentioned above](#prior-and-likelihood)), and see what it does to the efficiency of the sampler.  Try injecting three or four bumps, or just a single bump!
 ```
