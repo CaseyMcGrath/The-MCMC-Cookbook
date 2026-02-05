@@ -203,7 +203,6 @@ Now we can add this to our set of plots that we make to visualize the results of
 #-----------------------
 
 fig, ax = plt.subplots(1,1,figsize=(12,2), sharex=True)
-plt.subplots_adjust(hspace=0.05)
 ax.set_ylim([0,1])
 
 ax.scatter(np.arange(1,Nsample,1), jump_acceptance_ratio_inmodel, s=0.5)
