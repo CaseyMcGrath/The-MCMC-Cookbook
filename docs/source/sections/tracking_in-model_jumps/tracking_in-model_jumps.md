@@ -29,7 +29,7 @@ Ndim    = 3         # number of model dimensions
 x_samples = np.zeros((Nsample, Ndim))
 
 # Initialize in-model jump tracking diagnostic (static counter)
-jump_counter_inmodel = 0
+counter_jump_inmodel = 0
 
 # Starting sample
 # --> (Pseudo-Code Step 1)
@@ -83,7 +83,7 @@ for i in tqdm(range(1,Nsample)):
             # accept the proposed sample
             x_samples[i,:] = x_proposed
             # update the in-model jump tracking diagnostic
-            jump_counter_inmodel += 1
+            counter_jump_inmodel += 1
         else:
             # keep the current sample
             x_samples[i,:] = x_current
@@ -95,7 +95,7 @@ for i in tqdm(range(1,Nsample)):
 
 ```python
 # Calculate the in-model jump acceptance ratio (static average)
-jump_acceptance_ratio_inmodel = jump_counter_inmodel / (Nsample-1)
+jump_acceptance_ratio_inmodel = counter_jump_inmodel / (Nsample-1)
 
 print("In-Model Jump Acceptance Ratio = {0:0.2f}".format(jump_acceptance_ratio_inmodel))
 ```
@@ -123,7 +123,7 @@ x_samples = np.zeros((Nsample, Ndim))
 
 # Initialize in-model jump tracking diagnostic (dynamic counter)
 # --> store 0 (jump rejected) or 1 (jump accepted)
-jump_counter_inmodel = np.zeros(Nsample-1)
+counter_jump_inmodel = np.zeros(Nsample-1)
 
 # Starting sample
 # --> (Pseudo-Code Step 1)
@@ -177,7 +177,7 @@ for i in tqdm(range(1,Nsample)):
             # accept the proposed sample
             x_samples[i,:] = x_proposed
             # update the in-model jump tracking diagnostic
-            jump_counter_inmodel[i-1] = 1
+            counter_jump_inmodel[i-1] = 1
         else:
             # keep the current sample
             x_samples[i,:] = x_current
@@ -192,7 +192,7 @@ for i in tqdm(range(1,Nsample)):
 
 ```python
 # Calculate the in-model jump acceptance ratio (dynamic)
-jump_acceptance_ratio_inmodel = np.cumsum(jump_counter_inmodel) / np.arange(1,Nsample,1)
+jump_acceptance_ratio_inmodel = np.cumsum(counter_jump_inmodel) / np.arange(1,Nsample,1)
 ```
 
 Now we can add this to our set of plots that we make to visualize the results of our MCMC!
