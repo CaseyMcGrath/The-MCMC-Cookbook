@@ -370,7 +370,7 @@ jump_scheme_rates = [0.9,
 
 ### MCMC Algorithm
 
-Let's run our same MCMC algorithm as before, but now with three parameters!  We will follow our [pseudo-code outline](../mcmc_basics.md#pseudo-code-for-the-mcmc-algorithm) and our [schematic](../schematics/schematics.md#mcmc).
+We will follow our [pseudo-code outline](../mcmc_basics.md#pseudo-code-for-the-mcmc-algorithm) and our [schematic](../schematics/schematics.md#mcmc).
 
 ```{important}
 Let's get into a new habit for how we initialize our starting point.  Often as we are first building our MCMCs, it is useful practice initialize our sampler at or very near to the "true" injected parameters.  That works when we have synthetic data that we have created ourselves.  But in more realistic problems, we often *don't know* the true parameter values.  Moreover, the reason we build and run MCMCs is largely because we want to understand the underlying *posterior* PDF of the parameters in our model given the data we have observed. We want to know the trends, the covariances, the modes, etc.

@@ -272,7 +272,7 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 
 ### MCMC Algorithm
 
-Now for the MCMC algorithm!  
+We will follow our [pseudo-code outline](../mcmc_basics.md#pseudo-code-for-the-mcmc-algorithm) and our [schematic](../schematics/schematics.md#mcmc).
 
 ```{attention}
 [The last thing that we need to modify](../cyclic_parameters.md) for treating our cyclic parameter is to make sure that in the very final step of the algorithm, is to take any accepted proposed sample and modulo the parameter with its cyclic interval.  This will ensure that if the jump proposal proposed and accepted a jump to a cyclic parameter that lands outside of the prior boundary, the proposed sample is wrapped back into its periodic interval correctly!
