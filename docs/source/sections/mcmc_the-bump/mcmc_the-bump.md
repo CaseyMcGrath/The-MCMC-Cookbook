@@ -48,7 +48,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import pandas as pd
-from chainconsumer import ChainConsumer, Chain, Truth
+from chainconsumer import ChainConsumer, Chain, Truth, PlotConfig
 ```
 
 ### Generate the Dataset
@@ -341,7 +341,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [02:13<00:00, 1493.06it/s]
+    100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [02:17<00:00, 1452.78it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -352,8 +352,10 @@ Now let's take a look at our results, to see how well our MCMC sampler worked!
 
 
 ```python
-# store the parameter label for reference in the plots below (just for convenience)
-label = [r'$t_0$']
+# Store the parameter labels and search ranges for reference in the plots below (just for convenience)
+param_labels = [r'$t_0$']
+
+param_ranges = {param_labels[0]: [prior['t0'].support()[0], prior['t0'].support()[1]]}
 ```
 
 
@@ -366,7 +368,7 @@ fig, ax = plt.subplots(1,1,figsize=(12,2), sharex=True)
 
 # Set-up axes to match priors
 # --> grab the upper/lower limits for each prior
-ax.set_ylim([prior['t0'].support()[0], prior['t0'].support()[1]])
+ax.set_ylim(param_ranges[param_labels[0]])
 
 # Plot samples
 ax.scatter(np.arange(0,Nsample,1), x_samples, s=0.5)
@@ -374,7 +376,7 @@ ax.scatter(np.arange(0,Nsample,1), x_samples, s=0.5)
 ax.axhline(injection, color='k', linestyle='--')
 
 # Titles/Labels
-ax.set_ylabel(label[0], fontsize=12), ax.set_xlabel('Iteration', fontsize=12)
+ax.set_ylabel(param_labels[0], fontsize=12), ax.set_xlabel('Iteration', fontsize=12)
 ax.set_title('Burn-in')
 
 plt.show()
@@ -400,7 +402,7 @@ burn = 25_000
 
 # Pandas data stucture
 PD_samples_final = pd.DataFrame(data    = x_samples[burn:],  # discard the burn-in samples
-                                columns = label
+                                columns = param_labels,
                                 )
 # Regular array structure
 x_samples_final = np.asarray(PD_samples_final)
@@ -423,7 +425,11 @@ chain = Chain(samples = PD_samples_final,
 
 c.add_chain(chain)
 
-c.add_truth(Truth(location=dict(zip(label, np.asarray([injection]))), color='k'))
+# Plot injections
+c.add_truth(Truth(location=dict(zip(param_labels, np.asarray([injection]))), color='k'))
+
+# Set parameter ranges/scales
+c.set_plot_config(PlotConfig(extents=param_ranges))
 
 c.plotter.plot();
 ```
@@ -445,7 +451,7 @@ Let's also look examples of the MCMC inferences.
 fig, ax = plt.subplots(1,1,figsize=(8,5))
 
 # plot the data
-ax.plot(times, data,   color='gray', alpha=0.5, label='data')
+ax.plot(times, data, color='gray', alpha=0.5, label='data')
 
 # Randomly select a subset of parameter samples
 nselect = 50
@@ -501,7 +507,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import pandas as pd
-from chainconsumer import ChainConsumer, Chain, Truth
+from chainconsumer import ChainConsumer, Chain, Truth, PlotConfig
 ```
 
 ### Generate the Dataset
@@ -823,7 +829,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [00:55<00:00, 3615.38it/s]
+    100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [00:57<00:00, 3498.50it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -842,8 +848,11 @@ We will also try to 'future-proof' the code a bit more here, and write things ge
 
 
 ```python
-# store the parameter labels for reference in the plots below (just for convenience)
-label = [r'$t_0$', r'$\sigma$']
+# Store the parameter labels and search ranges for reference in the plots below (just for convenience)
+param_labels = [r'$t_0$', r'$\sigma$']
+
+param_ranges = {param_labels[0]: [prior['t0'].support()[0], prior['t0'].support()[1]], 
+                param_labels[1]: [prior['sigma'].a, prior['sigma'].b]}
 ```
 
 
@@ -859,7 +868,7 @@ plt.subplots_adjust(hspace=0.1)
 # --> scale the y-axis to the prior search scale
 ax[1].set_yscale('log')
 # --> grab the upper/lower limits for each prior
-ax[0].set_ylim([prior['t0'].support()[0], prior['t0'].support()[1]]), ax[1].set_ylim([prior['sigma'].a, prior['sigma'].b])
+ax[0].set_ylim(param_ranges[param_labels[0]]), ax[1].set_ylim(param_ranges[param_labels[1]])
 
 
 # Plot samples
@@ -870,7 +879,7 @@ for i in range(Ndim):
     ax[i].axhline(injection[i], color='k', linestyle='--')
 
     # y-axis labels
-    ax[i].set_ylabel(label[i], fontsize=12)
+    ax[i].set_ylabel(param_labels[i], fontsize=12)
 
 # Titles/Labels
 ax[-1].set_xlabel('Iteration', fontsize=12)
@@ -899,7 +908,7 @@ burn = 25_000
 
 # Pandas data stucture
 PD_samples_final = pd.DataFrame(data    = x_samples[burn:],  # discard the burn-in samples
-                                columns = label
+                                columns = param_labels,
                                 )
 # Regular array structure
 x_samples_final = np.asarray(PD_samples_final)
@@ -916,13 +925,19 @@ Create the final corner plot of the posterior samples.
 c = ChainConsumer()
 
 chain = Chain(samples = PD_samples_final,
-              columns = label,
+              columns = param_labels,
               name    = "MCMC: 2D Bump",
               )
 
 c.add_chain(chain)
 
-c.add_truth(Truth(location=dict(zip(label, np.asarray(injection))), color='k'))
+# Plot injections
+c.add_truth(Truth(location=dict(zip(param_labels, np.asarray(injection))), color='k'))
+
+# Set parameter ranges/scales
+param_logscales = [param_labels[1]]
+c.set_plot_config(PlotConfig(extents=param_ranges, log_scales=param_logscales))
+
 
 c.plotter.plot();
 ```
@@ -944,7 +959,7 @@ Let's also look examples of the MCMC inferences.
 fig, ax = plt.subplots(1,1,figsize=(8,5))
 
 # plot the data
-ax.plot(times, data,   color='gray', alpha=0.5, label='data')
+ax.plot(times, data, color='gray', alpha=0.5, label='data')
 
 # Randomly select a subset of parameter samples
 nselect = 50
@@ -996,7 +1011,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import pandas as pd
-from chainconsumer import ChainConsumer, Chain, Truth
+from chainconsumer import ChainConsumer, Chain, Truth, PlotConfig
 ```
 
 ### Generate the Dataset
@@ -1311,7 +1326,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:14<00:00, 2685.38it/s]
+    100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:17<00:00, 2573.63it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -1328,8 +1343,12 @@ Thanks to our 'future-proofing' we did above in [the plots for our 2D model](#re
 
 
 ```python
-# store the parameter labels for reference in the plots below (just for convenience)
-label = [r'$A$', r'$t_0$', r'$\sigma$']
+# Store the parameter labels and search ranges for reference in the plots below (just for convenience)
+param_labels = [r'$A$', r'$t_0$', r'$\sigma$']
+
+param_ranges = {param_labels[0]: [prior['A'].a, prior['A'].b],
+                param_labels[1]: [prior['t0'].support()[0], prior['t0'].support()[1]], 
+                param_labels[2]: [prior['sigma'].a, prior['sigma'].b]}
 ```
 
 
@@ -1345,17 +1364,18 @@ plt.subplots_adjust(hspace=0.1)
 # --> scale the y-axis to the prior search scale
 ax[0].set_yscale('log'), ax[2].set_yscale('log')
 # --> grab the upper/lower limits for each prior
-ax[0].set_ylim([prior['A'].a, prior['A'].b]), ax[1].set_ylim([prior['t0'].support()[0], prior['t0'].support()[1]]), ax[2].set_ylim([prior['sigma'].a, prior['sigma'].b])
+ax[0].set_ylim(param_ranges[param_labels[0]]), ax[1].set_ylim(param_ranges[param_labels[1]])
+
 
 # Plot samples
 for i in range(Ndim):
     ax[i].scatter(np.arange(0,Nsample,1), x_samples[:,i], s=0.5)
-    
+
     # Plot injections
     ax[i].axhline(injection[i], color='k', linestyle='--')
 
     # y-axis labels
-    ax[i].set_ylabel(label[i], fontsize=12)
+    ax[i].set_ylabel(param_labels[i], fontsize=12)
 
 # Titles/Labels
 ax[-1].set_xlabel('Iteration', fontsize=12)
@@ -1384,7 +1404,7 @@ burn = 25_000
 
 # Pandas data stucture
 PD_samples_final = pd.DataFrame(data    = x_samples[burn:],  # discard the burn-in samples
-                                columns = label
+                                columns = param_labels,
                                 )
 # Regular array structure
 x_samples_final = np.asarray(PD_samples_final)
@@ -1401,13 +1421,18 @@ Create the final corner plot of the posterior samples.
 c = ChainConsumer()
 
 chain = Chain(samples = PD_samples_final,
-              columns = label,
+              columns = param_labels,
               name    = "MCMC: 3D Bump",
               )
 
 c.add_chain(chain)
 
-c.add_truth(Truth(location=dict(zip(label, np.asarray(injection))), color='k'))
+# Plot injections
+c.add_truth(Truth(location=dict(zip(param_labels, np.asarray(injection))), color='k'))
+
+# Set parameter ranges/scales
+param_logscales = [param_labels[2]]
+c.set_plot_config(PlotConfig(extents=param_ranges, log_scales=param_logscales))
 
 c.plotter.plot();
 ```
@@ -1429,7 +1454,7 @@ Let's also look examples of the MCMC inferences.
 fig, ax = plt.subplots(1,1,figsize=(8,5))
 
 # plot the data
-ax.plot(times, data,   color='gray', alpha=0.5, label='data')
+ax.plot(times, data, color='gray', alpha=0.5, label='data')
 
 # Randomly select a subset of parameter samples
 nselect = 50

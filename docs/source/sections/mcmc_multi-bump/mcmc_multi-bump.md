@@ -48,7 +48,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import pandas as pd
-from chainconsumer import ChainConsumer, Chain, Truth
+from chainconsumer import ChainConsumer, Chain, Truth, PlotConfig
 ```
 
 ### Generate the Dataset
@@ -464,7 +464,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:17<00:00, 2588.29it/s]
+    100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:19<00:00, 2505.48it/s]
 
 
 
@@ -479,8 +479,12 @@ Now let's take a look at our results, to see how well our MCMC sampler worked!
 
 
 ```python
-# store the parameter labels for reference in the plots below (just for convenience)
-label = [r'$A$', r'$t_0$', r'$\sigma$']
+# Store the parameter labels and search ranges for reference in the plots below (just for convenience)
+param_labels = [r'$A$', r'$t_0$', r'$\sigma$']
+
+param_ranges = {param_labels[0]: [prior['A'].a, prior['A'].b], 
+                param_labels[1]: [prior['t0'].support()[0], prior['t0'].support()[1]], 
+                param_labels[2]: [prior['sigma'].a, prior['sigma'].b]}
 ```
 
 ```{margin}
@@ -500,7 +504,7 @@ plt.subplots_adjust(hspace=0.1)
 # --> scale the y-axis to the prior search scale
 ax[0].set_yscale('log'), ax[2].set_yscale('log')
 # --> grab the upper/lower limits for each prior
-ax[0].set_ylim([prior['A'].a, prior['A'].b]), ax[1].set_ylim([prior['t0'].support()[0], prior['t0'].support()[1]]), ax[2].set_ylim([prior['sigma'].a, prior['sigma'].b])
+ax[0].set_ylim(param_ranges[param_labels[0]]), ax[1].set_ylim(param_ranges[param_labels[1]]), ax[2].set_ylim(param_ranges[param_labels[2]])
 
 # Plot samples
 for i in range(Ndim):
@@ -511,7 +515,7 @@ for i in range(Ndim):
         ax[i].axhline(inj[i], color='k', linestyle='--')
 
     # y-axis labels
-    ax[i].set_ylabel(label[i], fontsize=12)
+    ax[i].set_ylabel(param_labels[i], fontsize=12)
 
 # Titles/Labels
 ax[-1].set_xlabel('Iteration', fontsize=12)
@@ -566,7 +570,7 @@ burn = 20_000
 
 # Pandas data stucture
 PD_samples_final = pd.DataFrame(data    = x_samples[burn:],  # discard the burn-in samples
-                                columns = label
+                                columns = param_labels,
                                 )
 # Regular array structure
 x_samples_final = np.asarray(PD_samples_final)
@@ -589,15 +593,20 @@ Another very cool feature of *ChainConsumer* is that we can identify when we thi
 c = ChainConsumer()
 
 chain = Chain(samples    = PD_samples_final,
-              columns    = label,
+              columns    = param_labels,
               name       = "MCMC: Multi-Bump",
               multimodal = True,
               )
 
 c.add_chain(chain)
 
+# Plot injections
 for inj in injection:
-    c.add_truth(Truth(location=dict(zip(label, np.asarray(inj))), color='k', marker='+', marker_size='600'))
+    c.add_truth(Truth(location=dict(zip(param_labels, np.asarray(inj))), color='k', marker='+', marker_size='600'))
+
+# Set parameter ranges/scales
+param_logscales = [param_labels[2]]
+c.set_plot_config(PlotConfig(log_scales=param_logscales, extents=param_ranges))
 
 c.plotter.plot();
 ```
@@ -619,7 +628,7 @@ Let's also look examples of the MCMC inferences.
 fig, ax = plt.subplots(1,1,figsize=(8,5))
 
 # plot the data
-ax.plot(times, data,   color='gray', alpha=0.5, label='data')
+ax.plot(times, data, color='gray', alpha=0.5, label='data')
 
 # Randomly select a subset of parameter samples
 nselect = 50
