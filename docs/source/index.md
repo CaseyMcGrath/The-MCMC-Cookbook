@@ -1,6 +1,7 @@
 
+# The MCMC Cookbook
 
-# Recipes for Crafting MCMCs
+## Recipes for Crafting MCMCs
 
 When I first began my journey into the world of Markov Chain Monte Carlo (MCMC) samplers (in graduate school), I used a pre-built sampler.  I installed it and learned how to use it through a combination of practice on toy problems and reading through the documentation.  And then I tried to use it to solve the very specific problem for my research.  I suspect that many people begin their own MCMC journeys in a similar way.
 
