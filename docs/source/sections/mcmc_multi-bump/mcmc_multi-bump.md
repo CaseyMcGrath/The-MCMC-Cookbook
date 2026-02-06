@@ -34,7 +34,7 @@ Here are the ingredients that we are going to use in this MCMC:
 
 ## Multi-Bump
 
-In the original [bump model problem](../toy_problems.md#the-bump) we fit a Guassian-shaped model to a data set that had a single observed bump in it.  However, what if that same data-set had more than one bump?  In this case, it would be a multi-modal problem, so we would expect that exploring the full posterior PDF will be more challenging than it was before.  But apart from that we don't need to modify much, we can run the same set-up as we had before!
+In the original [bump model problem](../toy_problems/toy_problems.md#the-bump) we fit a Guassian-shaped model to a data set that had a single observed bump in it.  However, what if that same data-set had more than one bump?  In this case, it would be a multi-modal problem, so we would expect that exploring the full posterior PDF will be more challenging than it was before.  But apart from that we don't need to modify much, we can run the same set-up as we had before!
 
 ```{attention}
 For what follows, we will effectively copy/paste all of the code we wrote for our [3D Bump problem](../mcmc_the-bump/mcmc_the-bump.md#3d-bump) and use it again!  We will need to make some slight modifications to inject multiple "bumps" as signals into the data, and we will incorporate the code we developed for using [multiple jump schemes](../multiple_jump_schemes/multiple_jump_schemes.md).
@@ -137,7 +137,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems.md#the-bump).
+Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
 
 With regards to the likelihood,
 > **we still don't need to worry about including the normalization in our definition of the likelihood function here, for the reason we explained above in the 1D problem.**

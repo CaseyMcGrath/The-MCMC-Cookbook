@@ -34,7 +34,7 @@ Here are the ingredients that we are going to use in this MCMC:
 
 ## 1D Bump
 
-We will start with [The Bump problem](../toy_problems.md#the-bump).  Since this is our very first MCMC, we will start by making it a model of only one parameter $t_0$, by fixing the other two parameters $A=3.4$ and $\sigma = 0.5$!  We will repeat the exercise below two more times and add back in one additional parameter each time!
+We will start with [The Bump problem](../toy_problems/toy_problems.md#the-bump).  Since this is our very first MCMC, we will start by making it a model of only one parameter $t_0$, by fixing the other two parameters $A=3.4$ and $\sigma = 0.5$!  We will repeat the exercise below two more times and add back in one additional parameter each time!
 
 So the question we are essentially asking is, 
 
@@ -132,7 +132,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems.md#the-bump).
+Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
 
 For the prior, we will stick to the same way we did it in [Building Prior Distributions](../building_priors/building_priors.md).  Since we are beginning with only the $t_0$ parameter, we just need a simple uniform prior bounded by our `starttime` and `endtime`.
 
@@ -598,7 +598,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems.md#the-bump).
+Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
 
 With regards to the likelihood,
 > **we still don't need to worry about including the normalization in our definition of the likelihood function here, for the reason we explained above in the 1D problem.**
@@ -997,7 +997,7 @@ Looking at these three plots, I'd say things still look pretty good by eye!
 
 ## 3D Bump
 
-Alright, now that we have practiced running our MCMC on slightly simplified versions of our original [bump model](../toy_problems.md#the-bump), we are ready to run it on the full model - let's vary all three parameters $A$, $t_0$, and $\sigma$!
+Alright, now that we have practiced running our MCMC on slightly simplified versions of our original [bump model](../toy_problems/toy_problems.md#the-bump), we are ready to run it on the full model - let's vary all three parameters $A$, $t_0$, and $\sigma$!
 
 ```{attention}
 For what follows, we will effectively copy/paste all of the code above that we wrote for our [2D Bump problem](#2d-bump) and use it again!
@@ -1101,7 +1101,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems.md#the-bump).
+Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
 
 With regards to the likelihood,
 > **we still don't need to worry about including the normalization in our definition of the likelihood function here, for the reason we explained above in the 1D problem.**

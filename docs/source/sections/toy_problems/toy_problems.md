@@ -27,6 +27,10 @@ We will assume all three parameters are **independent**.
 
 We collect a total of $N_t$ observed data and store it in an array $\vec{d}$.  And let's say that the observation uncertainty is the same for every data point.  In other words, the underlying noise in our measurements is just "white noise" with standard deviation $\sigma_n$ - none of our observations are correlated with each other.
 
+Here is visual example of what this signal and dataset might look like:
+
+![png](bump_dataset_example.png)
+
 **Likelihood**
 
 With the description of the dataset's noise in mind, we might therefore expect that if we could perfectly extract just the noise from our data, and plot a histogram of it, the noise should just be randomly distributed following a Gaussian distribution.  Since the data $\vec{d}$ is just the noise $\vec{n}$ plus our underlying signal/model $\vec{M}$, the noise is therefore $\vec{n} = \vec{d} - \vec{M}$, and we could write our likelihood function as a multivariate Gaussian:
@@ -83,6 +87,10 @@ We will assume all three parameters are **independent**.
 **Dataset**
 
 We collect a total of $N_t$ observed data and store it in an array $\vec{d}$.  And let's say that the observation uncertainty is the same for every data point.  In other words, the underlying noise in our measurements is just "white noise" with standard deviation $\sigma_n$ - none of our observations are correlated with each other.
+
+Here is visual example of what this signal and dataset might look like:
+
+![png](wave_dataset_example.png)
 
 **Likelihood**
 
