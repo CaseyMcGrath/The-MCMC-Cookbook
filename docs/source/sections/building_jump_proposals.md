@@ -198,6 +198,11 @@ The Gaussian / Multivariate Normal jump proposals are a special type of jump pro
 $$
 \text{jump}\left(\vec{x}_{i}|\vec{x}_{i+1}\right) = \text{jump}\left(\vec{x}_{i+1}|\vec{x}_{i}\right) .
 $$
+
+Examples of symmetric proposals:
+- Gaussian / Multivariate Normal
+- Uniform ([Continuous](https://en.wikipedia.org/wiki/Continuous_uniform_distribution) and [Discrete](https://en.wikipedia.org/wiki/Discrete_uniform_distribution))
+- [Laplace](https://en.wikipedia.org/wiki/Laplace_distribution)
 ```
 
 Did you notice that no matter what, when you run the above cells repeatedly, even though the proposed sample is different every time, and the PDF values themselves are different, the forward and reverse PDFs always match?  This is the reason!  And moreover, you can see mathematically that $\text{jump}\left(a|b\right) = \text{jump}\left(b|a\right)$ for the Gaussian jump (and $\text{jump}\left(\vec{a}|\vec{b}\right) = \text{jump}\left(\vec{b}|\vec{a}\right)$ for the Multivariate Normal jump).
@@ -208,7 +213,7 @@ This is convenient, because if we can prove mathematically that the jump proposa
 
 A very useful type of jump proposal to include in an MCMC is a general "prior jump."  As a function, it says, "draw a random sample from the prior PDF itself, and return the PDF value."
 
-So this jump proposal will directly make use of [whatever prior distributions](./building_priors/building_priors.md) we are using for our model parameters.  In essense it is a very "uninformed jump."  For example, the [Gaussian](#gaussian-jumps) and [Multivariate Normal](#multivariate-normal-jumps) jumps both use the current parameter sample in the MCMC to draw the next proposed sample.  But the prior jump does not - it is like blindly throwing a dart at a dart board.  The only constraint with the prior jump is that the next proposed parameter sample must just exist somewhere within the prior space that we have defined!
+So this jump proposal will directly make use of [whatever prior distributions](./building_priors/building_priors.md) we are using for our model parameters.  In some sense it is a sort of "uninformed jump."  For example, the [Gaussian](#gaussian-jumps) and [Multivariate Normal](#multivariate-normal-jumps) jumps both use the current parameter sample in the MCMC to draw the next proposed sample, so they are somewhat restricted to searching the local parameters around the current parameter.  But the prior jump does not - it is like blindly throwing a dart at a dart board using only the prior knowledge that we started with.  The only constraint with the prior jump is that the next proposed parameter sample must just exist somewhere within the prior space that we have defined!
 
 ### Example
 
@@ -293,9 +298,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
     PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.0602
 
 
-Unlike with the symmetric jump proposals, now you should notice that the forward and reverse jumps end up having different PDF values every time you generate a new proposed sample!
+Unlike with the symmetric jump proposals, now you should notice that the forward and reverse jumps in this example end up having different PDF values every time you generate a new proposed sample!
 
-> The prior jump proposal is a **non-symmetric** jump proposal!
+> So is the prior jump symmetric?  Only if the problem/example we are considering has symmetric priors *for every parameter*.  Otherwise, if any of the parameters have a non-symmetric prior, then the prior jump proposal is non-symmetric! 
 
 ### An Interesting Observation about Prior Jumps
 
