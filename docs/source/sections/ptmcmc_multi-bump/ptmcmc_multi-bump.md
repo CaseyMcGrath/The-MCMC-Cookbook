@@ -375,7 +375,7 @@ x_samples = np.zeros((Nsample, Ntemp, Ndim))
 
 # Initialize tracking diagnostics (dynamic counters)
 counter_jump_inmodel = np.zeros((Nsample-1,Ntemp))
-counter_temp_swap    = np.empty((Nsample-1,Ntemp-1)) * np.nan
+counter_temp_swap    = np.full((Nsample-1,Ntemp-1), np.nan)
 
 # Starting sample
 # --> (MCMC Pseudo-Code Step 1)
