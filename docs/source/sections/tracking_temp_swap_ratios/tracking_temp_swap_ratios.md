@@ -25,6 +25,10 @@ counter_temp_swap = np.zeros(Ntemp-1)
 
 For every iteration, we will select two adjacent temperatures, and we will cycle through them in order from lowest temperature to highest temperature, before repeating the cycle.  We can use the current iteration to select the indices of adjacent temperatures with the following.  By using the modulo operator ('%'), we can repeat the cycle once we reach the last temperature pair!
 
+```{margin}
+We haven't yet seen the full example of the PTMCMC code - that's the next section!  I just want to focus attention on the part of the code that will be doing the temperature swap tracking, so some of the code is omitted (...) and other parts might not make complete sense without context.  If you are confused, try jumping to the next section to see the full implementation of the PTMCMC, then come back to this section!
+```
+
 ```python
     # Select two temperatures and their samples to propose to swap (cycle through these at each iteration)
     # --> (PT Pseudo-Code Step 4)

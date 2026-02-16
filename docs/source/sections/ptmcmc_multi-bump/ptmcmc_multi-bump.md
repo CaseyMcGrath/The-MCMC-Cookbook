@@ -360,9 +360,7 @@ temp_ladder = [1, 1.8, 3, 8]
 Ntemp       = len(temp_ladder)
 ```
 
-In this example, we are also going to add a **dynamic** temperature swap acceptance tracker, so that we can better diagnose how efficiently our sampler is swapping temperatures.
-
-We are also going to add a new counter to track the temperature swaps between the parallel MCMCs.  And we'll modify the counter for the in-model jumps so that we can also track those across all of the parallel MCMCs.  In this example we are going to set up dynamic counters for both.
+In this example, we are also going to add a [**dynamic** temperature swap acceptance tracker](../tracking_temp_swap_ratios/tracking_temp_swap_ratios.md#dynamic-counter), so that we can better diagnose how efficiently our sampler is swapping temperatures.  And we'll modify the counter for the in-model jumps so that we can also track those across all of the parallel MCMCs (also dynamically).
 
 
 ```python
