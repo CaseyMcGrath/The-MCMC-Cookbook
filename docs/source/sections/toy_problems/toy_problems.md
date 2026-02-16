@@ -39,8 +39,8 @@ $$
 \begin{align}
     \text{like}\left(\vec{d} | \vec{x} \right) &= \mathcal{N} \exp\left[-\frac{1}{2}\frac{\left(\vec{d} - \vec{M}(t,\vec{x}) \right)^2}{\sigma_n^2}\right] \\
     &= \mathcal{N} \exp\left[-\frac{1}{2}\left(\frac{\left(d_1 - M(t_1,\vec{x}) \right)^2}{\sigma_n^2} + \frac{\left(d_2 - M(t_2,\vec{x}) \right)^2}{\sigma_n^2} + \cdots \right)\right] \\
-    &= \mathcal{N} \exp\left[-\frac{1}{2}\sum_{i}^{N_t}\frac{\left(\vec{d}_i - \vec{M}(t_i,\vec{x}) \right)^2}{\sigma_n^2}\right] \\
-    &= \mathcal{N} \prod_{i}^{N_t} \exp\left[-\frac{1}{2}\frac{\left(\vec{d}_i - \vec{M}(t_i,\vec{x}) \right)^2}{\sigma_n^2}\right] \\
+    &= \mathcal{N} \exp\left[-\frac{1}{2}\sum_{i}^{N_t}\frac{\left(d_i - M(t_i,\vec{x}) \right)^2}{\sigma_n^2}\right] \\
+    &= \mathcal{N} \prod_{i}^{N_t} \exp\left[-\frac{1}{2}\frac{\left(d_i - M(t_i,\vec{x}) \right)^2}{\sigma_n^2}\right]
 \end{align}
 $$(time_domain_likelihood)
 
