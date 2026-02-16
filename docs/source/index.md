@@ -82,6 +82,7 @@ sections/multiple_jump_schemes/multiple_jump_schemes
 sections/mcmc_multi-bump/mcmc_multi-bump
 
 sections/ptmcmc_basics
+sections/tracking_temp_swap_ratios/tracking_temp_swap_ratios
 sections/ptmcmc_multi-bump/ptmcmc_multi-bump
 
 sections/references
