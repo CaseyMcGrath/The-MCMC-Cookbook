@@ -72,8 +72,9 @@ sections/building_priors/building_priors
 sections/building_jump_proposals
 
 sections/toy_problems/toy_problems
-sections/mcmc_the-bump/mcmc_the-bump
+sections/normalizations
 
+sections/mcmc_the-bump/mcmc_the-bump
 sections/tracking_in-model_jumps/tracking_in-model_jumps
 sections/cyclic_parameters
 
