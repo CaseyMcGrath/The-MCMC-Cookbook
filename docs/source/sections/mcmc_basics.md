@@ -20,7 +20,7 @@ $$ (bayes_theorem)
 with each of the following components:
 
 ```{margin} Probability Density Functions (PDFs)
-Remember that to be a PDF, it must be normalized. It is a *probability density*, the integral over all possible values of the input must add up to $1$.  We have three PDFs in this table, but in the general literature only one of them has a uniquely *named* normalization factor - the posterior's evidence.  However, both the prior and the likelihood are also normalized functions by themselves.  Sometimes in MCMC coding and analysis, we can get away with removing their normalization factors because they aren't explicitly needed.  In fact, we often don't need the evidence when coding up a MCMC sampler either!  We will do our best to be careful and explicitly acknowledge when we do and don't need their normalizations, and explain why.
+Remember that to be a PDF, it must be normalized. It is a *probability density*, the integral over all possible values of the input must add up to $1$.  We have three PDFs in this table, but in the general literature only one of them has a uniquely *named* normalization factor - the posterior's evidence.  However, both the prior and the likelihood are also normalized functions by themselves.  Sometimes in MCMC coding and analysis, we can get away with removing their normalization factors because they aren't explicitly needed.  In fact, we often don't need the evidence when coding up a MCMC sampler either!  The importance of normalizations is discussed further in [The Importance of Normalizing PDFs](./normalizations.md).
 ```
 | Object | Type | Description |
 |-------:|:----:|:------------|

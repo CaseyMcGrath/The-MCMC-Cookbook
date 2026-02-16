@@ -132,10 +132,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
-
-With regards to the likelihood,
-> **we still don't need to worry about including the normalization in our definition of the likelihood function here, for the reason we explained above in the 1D problem.**
+Next we need to write down our prior and (unnormalized) likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
 
 
 ```python

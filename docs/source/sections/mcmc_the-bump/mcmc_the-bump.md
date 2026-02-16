@@ -138,7 +138,9 @@ For the prior, we will stick to the same way we did it in [Building Prior Distri
 
 For the likelihood, note that the normalization constant $\mathcal{N}$ does *not* depend on our model parameter value at all (i.e., it has no functional dependence on $t_0$).  That means the value of $\mathcal{N}$ will remain constant every time we calculate the terms in equation {eq}`acceptance_ratio_code`, therefore they will always cancel out.
 
-> **So we don't need to worry about including the normalization in our definition of the likelihood function here for this MCMC algorithm.**
+```{attention}
+[As discussed here](../normalizations.md), we don't need to worry about including the normalization in our definition of the likelihood function for this MCMC algorithm.
+```
 
 
 ```python
@@ -598,10 +600,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
-
-With regards to the likelihood,
-> **we still don't need to worry about including the normalization in our definition of the likelihood function here, for the reason we explained above in the 1D problem.**
+Next we need to write down our prior and (unnormalized) likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
 
 
 ```{margin}
@@ -1101,10 +1100,7 @@ plt.show()
 
 ###  Prior and Likelihood
 
-Next we need to write down our prior and likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
-
-With regards to the likelihood,
-> **we still don't need to worry about including the normalization in our definition of the likelihood function here, for the reason we explained above in the 1D problem.**
+Next we need to write down our prior and (unnormalized) likelihood that we described in [The Bump](../toy_problems/toy_problems.md#the-bump).
 
 
 ```{margin}
