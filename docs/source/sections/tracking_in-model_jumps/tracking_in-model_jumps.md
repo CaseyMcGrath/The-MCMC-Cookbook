@@ -48,7 +48,7 @@ print("In-Model Jump Acceptance Ratio = {0:0.2f}".format(jump_acceptance_ratio_i
 
 Now when we run our sampler and calculate the above average, it will print out something like:
 
-    In-Model Jump Acceptance Ratio = 0.13
+    In-Model Jump Acceptance Ratio = 0.29
 
 
 So this gives us a high-level view of how our sampler is performing.  But it is just the overall average jump acceptance ratio for the entire run of our MCMC.
@@ -113,6 +113,4 @@ ax.grid()
 plt.show()
 ```
 
-
-    
 ![png](dynamic_acceptance_plot.png)

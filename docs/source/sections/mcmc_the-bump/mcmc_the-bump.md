@@ -341,7 +341,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [02:17<00:00, 1452.78it/s]
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [02:15<00:00, 1472.88it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -419,7 +419,7 @@ Create the final corner plot of the posterior samples.
 c = ChainConsumer()
 
 chain = Chain(samples = PD_samples_final,
-              columns = label,
+              columns = param_labels,
               name    = "MCMC: 1D Bump",
               )
 
@@ -690,8 +690,8 @@ But it is **critical** that the standard deviation in both the forward and rever
 
 def jump_F_MultivariateNorm(sample_current):
     # Covariance matrix that set's each parameter's jump scale
-    Cov = np.array([[1, 0  ],
-                    [0, 0.6]])
+    Cov = np.array([[0.1, 0  ],
+                    [0,   0.1]])
     
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
     sample_proposed = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).rvs()
@@ -704,8 +704,8 @@ def jump_F_MultivariateNorm(sample_current):
 
 def jump_R_MultivariateNorm(sample_current, sample_proposed):
     # standard deviation of the jump
-    Cov = np.array([[1, 0  ],
-                    [0, 0.6]])
+    Cov = np.array([[0.1, 0  ],
+                    [0,   0.1]])
     
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
     pdf_value = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov).pdf(sample_current)
@@ -733,9 +733,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [3.783, 1.2]
-    Proposed Sample = [4.14078736 1.63438183]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.1647
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.1647
+    Proposed Sample = [3.8961423  1.37733564]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 1.2757
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 1.2757
 
 
 ### MCMC Algorithm
@@ -829,7 +829,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [00:57<00:00, 3498.50it/s]
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:00<00:00, 3287.10it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -899,7 +899,7 @@ Now that we have an idea of how long it took our sampler to burn-in, let's throw
 
 ```python
 # Discard (burn) samples
-burn = 25_000
+burn = 40_000
 
 # Final posterior samples
 # --> we will save two copies of the final samples: 
@@ -1195,9 +1195,9 @@ But it is **critical** that the standard deviation in both the forward and rever
 
 def jump_F_MultivariateNorm(sample_current):
     # Covariance matrix that set's each parameter's jump scale
-    Cov = np.array([[0.4, 0, 0   ],
-                    [0,   1, 0   ],
-                    [0,   0, 0.06]])
+    Cov = np.array([[0.1, 0,   0   ],
+                    [0,   0.1, 0   ],
+                    [0,   0,   0.1]])
     
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
     sample_proposed = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).rvs()
@@ -1210,9 +1210,9 @@ def jump_F_MultivariateNorm(sample_current):
 
 def jump_R_MultivariateNorm(sample_current, sample_proposed):
     # standard deviation of the jump
-    Cov = np.array([[0.4, 0, 0   ],
-                    [0,   1, 0   ],
-                    [0,   0, 0.06]])
+    Cov = np.array([[0.1, 0,   0   ],
+                    [0,   0.1, 0   ],
+                    [0,   0,   0.1]])
     
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
     pdf_value = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov).pdf(sample_current)
@@ -1240,9 +1240,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.783, 1.2]
-    Proposed Sample = [4.45467128 4.14078736 1.46529229]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.1827
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.1827
+    Proposed Sample = [4.2131423  3.96033564 1.54249088]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.8952
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.8952
 
 
 ### MCMC Algorithm
@@ -1326,7 +1326,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:17<00:00, 2573.63it/s]
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:12<00:00, 2770.11it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
