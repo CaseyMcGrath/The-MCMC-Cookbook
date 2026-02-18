@@ -84,7 +84,7 @@ times     = np.linspace(starttime, endtime, Nt)
 
 # Inject the true value of the parameters we will try to recover!
 injection = [[3.4, 7.6, 0.5],
-             [4.7, 17.5, 0.2]]
+             [4.5, 16.1, 0.3]]
 
 signal = np.zeros_like(times)
 for inj in injection:
@@ -99,10 +99,10 @@ For the sake of replicability, let us set a random seed when generating the nois
 # --> this dataset has uncorrelated white noise
 
 # Setting a random seed so that you can replicate the graphs
-np.random.seed(42)
+rng_seed = np.random.default_rng(seed=42)
 
 sigma_n = 2
-noise   = np.random.normal(0, sigma_n, size=Nt)
+noise   = rng_seed.normal(0, sigma_n, size=Nt)
 ```
 
 
@@ -192,10 +192,10 @@ print(r"--> log-likelihood of injection 2 = {0:0.4f}".format(ln_like(injection[1
 
     Quick checks:
     --> log-prior of injection 1      = -6.5807
-    --> log-prior of injection 2      = -5.9882
+    --> log-prior of injection 2      = -6.3502
     --> log-prior out of prior range  = -1.0000e+300
-    --> log-likelihood of injection 1 = -99.7395
-    --> log-likelihood of injection 2 = -98.6449
+    --> log-likelihood of injection 1 = -89.3113
+    --> log-likelihood of injection 2 = -88.1532
 
 
 Ok everything seems fine, let's move on to defining our jump PDF!
@@ -259,9 +259,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.7, 1.2]
-    Proposed Sample = [4.45778736 3.73424909 1.21773356]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 28.3094
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 28.3094
+    Proposed Sample = [5.41751895 3.7400697  1.15936905]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 5.2319
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 5.2319
 
 
 
@@ -307,8 +307,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.7, 1.2]
-    Proposed Sample = [0.5235791  5.87183689 4.15644761]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0011
+    Proposed Sample = [4.08155879 2.19171123 1.30408251]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0004
     PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.0005
 
 
@@ -360,6 +360,7 @@ Ntemp       = len(temp_ladder)
 In this example, we are also going to add a [**dynamic** temperature swap acceptance tracker](../tracking_temp_swap_ratios/tracking_temp_swap_ratios.md#dynamic-counter), so that we can better diagnose how efficiently our sampler is swapping temperatures.  And we'll modify the counter for the in-model jumps so that we can also track those across all of the parallel MCMCs (also dynamically).
 
 
+
 ```python
 # data structure 
 Nsample = 200_000   # number of samples
@@ -367,6 +368,9 @@ Ndim    = 3         # number of model dimensions
 
 # Initialize data arrays
 x_samples = np.zeros((Nsample, Ntemp, Ndim))
+
+# Initialize random number generator for U draws
+rng = np.random.default_rng()
 
 # Initialize tracking diagnostics (dynamic counters)
 counter_jump_inmodel = np.zeros((Nsample-1,Ntemp))
@@ -405,7 +409,7 @@ for i in range(1,10):
 
 ```python
 # LOOP: Samples
-for i in tqdm(range(1,Nsample)):
+for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
 
     # LOOP: Temperatures --------------------------------------------------------------------------------------------------------------
     # --> (PT Pseudo-Code Step 2)
@@ -470,7 +474,7 @@ for i in tqdm(range(1,Nsample)):
     
     # Draw random number from Uniform Dist
     # --> (PT Pseudo-Code Step 3)
-    U   = np.random.uniform(0,1)
+    U   = rng.uniform(0,1)
     lnU = np.log(U)
 
     # Select two temperatures and their samples to propose to swap (cycle through these at each iteration)
@@ -502,7 +506,7 @@ for i in tqdm(range(1,Nsample)):
         counter_temp_swap[i-1,index1] = 0
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [05:02<00:00, 661.52it/s]
+    100%|██████████████████████████████| 199999/199999 [04:54<00:00, 678.63it/s]
 
 
 ```{margin}
@@ -743,11 +747,11 @@ plt.show()
     
 
 
-So how does this compare to our [regular MCMC results](../mcmc_multi-bump/mcmc_multi-bump.md#result-plots)?  Well comparing the two burn-in plots, I'd say that the PTMCMC did a better job of more efficiently exploring the modes.  For example, we can see that the PTMCMC sampler jumps more regularly between the $t_0$ modes as compared to the regular MCMC.  This results in a visually more "even" distribution of points in the other two parameters as well.
+So how does this compare to our [regular MCMC results](../mcmc_multi-bump/mcmc_multi-bump.md#result-plots)?  Well comparing the two burn-in plots, I'd say that the PTMCMC did a better job of more efficiently exploring the modes.  For example, we can see that the PTMCMC sampler jumps more frequently between the $t_0$ modes as compared to the regular MCMC.  This results in a visually more "even" distribution of points in the other two parameters as well.
 
 The in-model jump tracking diagnostic plots show the same thing, so both samplers are proposing jumps and accepting them at the same rate (which should make sense, because we did not change the jump cocktail being used between the two samplers!).  The addition of the temperature swap tracking plot let's us see how efficient our sampler is at making temperature swaps.
 
-The final posteriors don't change too much, but because the burn-in plot seems to show more evenly distributed jumps in the PTMCMC results, I personally would trust the PTMCMC posterior a little more than the MCMC one.
+The final posteriors don't change too much, but intriguingly, now the second bump shows more support than the first!  This aligns more with the [**Hint** we mentioned previously](../mcmc_multi-bump/mcmc_multi-bump.md#prior-and-likelihood), that because the *likelihood* function supports the second bump more than the first that we might expect the posterior to do the same.  But overall, because the burn-in plot seems to show more evenly distributed jumps in the PTMCMC results, I personally would trust the PTMCMC posterior more than the MCMC one.
 
 And lastly, like the posterior plots suggest, the two sets of inference plots look about the same.
 

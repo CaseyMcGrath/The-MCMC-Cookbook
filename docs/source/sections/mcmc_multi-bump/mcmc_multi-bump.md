@@ -88,7 +88,7 @@ For this problem we want to simulate a dataset with *two* bumps in it so we crea
 
 # Inject the true values of the parameters we will try to recover!
 injection = [[3.4, 7.6, 0.5],
-             [4.7, 17.5, 0.2]]
+             [4.5, 16.1, 0.3]]
 
 # calculate the signal from the model
 signal = np.zeros_like(times)
@@ -104,10 +104,10 @@ For the sake of replicability, let us set a random seed when generating the nois
 # --> this dataset has uncorrelated white noise
 
 # Setting a random seed so that you can replicate the graphs
-np.random.seed(42)
+rng_seed = np.random.default_rng(seed=42)
 
 sigma_n = 2
-noise   = np.random.normal(0, sigma_n, size=Nt)
+noise   = rng_seed.normal(0, sigma_n, size=Nt)
 ```
 
 
@@ -186,7 +186,7 @@ def ln_like(param, data, sigma_n, times):
 **Sanity Check:** Let's test the output of our prior and likelihood functions to make sure that they work the way we expect:
 
 ```{hint}
-Notice in particular the difference in the values of the log-likelihood at injection 1 vs. injection 2.  The actual value of the log-likelihood at the first bump (injection 1) is smaller than at the second bump (injection 2).  This already should help to build our intuition for what is going to happen when we run the MCMC algorithm.  Because the second bump has more support in the log-likelihood, our MCMC should find in the final posterior *more* support for the second bump as compared to the first bump.
+Notice in particular the difference in the values of the log-likelihood at injection 1 vs. injection 2.  The actual value of the log-likelihood at the first bump (injection 1) is smaller than at the second bump (injection 2).  This already should help to build our intuition for what might happen when we run the MCMC algorithm.  Because the second bump has more support in the log-likelihood, our MCMC will likely find *more* support in the final posterior for the second bump compared to the first bump.
 ```
 
 ```{margin}
@@ -205,10 +205,10 @@ print(r"--> log-likelihood of injection 2 = {0:0.4f}".format(ln_like(injection[1
 
     Quick checks:
     --> log-prior of injection 1      = -6.5807
-    --> log-prior of injection 2      = -5.9882
+    --> log-prior of injection 2      = -6.3502
     --> log-prior out of prior range  = -1.0000e+300
-    --> log-likelihood of injection 1 = -99.7395
-    --> log-likelihood of injection 2 = -98.6449
+    --> log-likelihood of injection 1 = -89.3113
+    --> log-likelihood of injection 2 = -88.1532
 
 
 Ok everything seems fine, let's move on to defining our jump PDF!
@@ -274,9 +274,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.7, 1.2]
-    Proposed Sample = [4.45778736 3.73424909 1.21773356]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 28.3094
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 28.3094
+    Proposed Sample = [4.99854025 3.66347384 1.25355155]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 5.1877
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 5.1877
 
 
 
@@ -322,8 +322,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.7, 1.2]
-    Proposed Sample = [0.5235791  5.87183689 4.15644761]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0011
+    Proposed Sample = [ 0.14003077 18.81736356  3.45831176]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0049
     PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.0005
 
 
@@ -388,6 +388,9 @@ Ndim    = 3         # number of model dimensions
 # Initialize data arrays
 x_samples = np.zeros((Nsample, Ndim))
 
+# Initialize random number generator for U draws
+rng = np.random.default_rng()
+
 # Initialize in-model jump tracking diagnostic (dynamic counter)
 # --> store 0 (jump rejected) or 1 (jump accepted)
 counter_jump_inmodel = np.zeros(Nsample-1)
@@ -408,7 +411,7 @@ Apart from this new development, nothing else in the MCMC loop below has changed
 
 ```python
 # LOOP: Samples
-for i in tqdm(range(1,Nsample)):
+for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
 
     # Current sample
     x_current = x_samples[i-1,:]
@@ -446,7 +449,7 @@ for i in tqdm(range(1,Nsample)):
         
         # Draw random number from Uniform Dist
         # --> (Pseudo-Code Step 4)
-        U   = np.random.uniform(0,1)
+        U   = rng.uniform(0,1)
         lnU = np.log(U)
 
         # Heart of the MCMC Algorithm: the acceptance criteria
@@ -461,7 +464,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:19<00:00, 2505.48it/s]
+    100%|██████████████████████████████| 199999/199999 [01:17<00:00, 2583.73it/s]
 
 
 
@@ -657,9 +660,9 @@ plt.show()
     
 
 
-So let's discuss what happened here.  We have a multi-modal problem, and for this particular example, our MCMC algorithm managed to find both of the modes.  Additionally, confirming our earlier [**Hint** we mentioned above](#prior-and-likelihood), we see that the sampler found more support (and thus, had a slightly easier time exploring) the second bump thanks to it having more support than the first bump in our log-likelihood function.
+So let's discuss what happened here.  We have a multi-modal problem, and for this particular example, our MCMC algorithm managed to find both of the modes.  
 
-If we re-run this sampler without any changes, then we might see that occasionally the sampler will explore the first bump.  But once it proposes a jump in parameter space that lands it close to the second bump, it will have a harder time jumping back to the first bump.
+Interestingly, thinking about the [**Hint** we mentioned above](#prior-and-likelihood), the sampler actually found more support here at the first mode (we can see that the peak in $t_0$ is taller for the first mode, suggesting a higher probability density around that point).  Perhaps if we run this sampler for more iterations, the second bump would grow taller?  Let's keep this in the back of our minds and we will revisit this after we've developed a parallel tempered MCMC!
 
 ```{admonition} Homework!
 

@@ -16,14 +16,18 @@ Let's just generate a bunch of random numbers and see how long it takes!
 ```python
 N = 10_000_000
 
-for i in tqdm(range(N)):
+for i in tqdm(range(N), bar_format='{l_bar}{bar:30}{r_bar}'):
     np.random.rand()
 ```
 
-    100%|██████████████████████████████████████████████████████████████████████████████████████████████████████| 10000000/10000000 [00:01<00:00, 5125529.09it/s]
+    100%|██████████████████████████████| 10000000/10000000 [00:02<00:00, 4426347.76it/s]
 
 
 Look at that, a nice little progress bar that shows you:
 - how long the loop was,
 - how long it took to complete the loop (and while the loop is running, it estimates how much time is left until it is finished!),
 - and the rate of loops/second (another useful tool for looking for ways for speeding up your code!).
+
+```{note}
+The `bar_format='{l_bar}{bar:30}{r_bar}'` is purely for adjusting the length of the progress bar!  You don't need to include it in your own code unless you want to, the default setting (just omit this entirely) works fine.  I'm only including it to *shorten* the length of the progress bar so that all of the text printed fits within the width of this webpage!
+```

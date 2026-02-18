@@ -99,10 +99,10 @@ For the sake of replicability, let us set a random seed when generating the nois
 # --> this dataset has uncorrelated white noise
 
 # Setting a random seed so that you can replicate the graphs
-np.random.seed(42)
+rng_seed = np.random.default_rng(seed=42)
 
 sigma_n = 2
-noise   = np.random.normal(0, sigma_n, size=Nt)
+noise   = rng_seed.normal(0, sigma_n, size=Nt)
 ```
 
 
@@ -193,7 +193,7 @@ print(r"--> log-likelihood of the injection = {0:0.4f}".format(ln_like(injection
     Quick checks:
     --> log-prior of the injection      = -2.9957
     --> log-prior out of prior range    = -1.0000e+300
-    --> log-likelihood of the injection = -86.4097
+    --> log-likelihood of the injection = -77.4844
 
 
 Ok everything seems fine, let's move on to defining our jump PDF!
@@ -257,9 +257,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = 3.7830
-    Proposed Sample = 4.1408
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.3742
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.3742
+    Proposed Sample = 3.1375
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.3239
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.3239
 
 
 ### MCMC Algorithm
@@ -276,6 +276,9 @@ Ndim    = 1         # number of model dimensions
 
 # Initialize data arrays
 x_samples = np.zeros((Nsample, Ndim))
+
+# Initialize random number generator for U draws
+rng = np.random.default_rng()
 
 # Starting sample
 # --> (Pseudo-Code Step 1)
@@ -295,7 +298,7 @@ Practically, I have also found that including this check sometimes will help avo
 
 ```python
 # LOOP: Samples
-for i in tqdm(range(1,Nsample)):
+for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
 
     # Current sample
     x_current = x_samples[i-1,:]
@@ -330,7 +333,7 @@ for i in tqdm(range(1,Nsample)):
     
         # Draw random number from Uniform Dist
         # --> (Pseudo-Code Step 4)
-        U   = np.random.uniform(0,1)
+        U   = rng.uniform(0,1)
         lnU = np.log(U)
 
         # Heart of the MCMC Algorithm: the acceptance criteria
@@ -343,7 +346,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [02:15<00:00, 1472.88it/s]
+    100%|██████████████████████████████| 199999/199999 [02:15<00:00, 1474.51it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -567,10 +570,10 @@ For the sake of replicability, let us set a random seed when generating the nois
 # --> this dataset has uncorrelated white noise
 
 # Setting a random seed so that you can replicate the graphs
-np.random.seed(42)
+rng_seed = np.random.default_rng(seed=42)
 
 sigma_n = 2
-noise   = np.random.normal(0, sigma_n, size=Nt)
+noise   = rng_seed.normal(0, sigma_n, size=Nt)
 ```
 
 
@@ -662,7 +665,7 @@ print(r"--> log-likelihood of the injection = {0:0.4f}".format(ln_like(injection
     Quick checks:
     --> log-prior of the injection      = -3.8298
     --> log-prior out of prior range    = -1.0000e+300
-    --> log-likelihood of the injection = -86.4097
+    --> log-likelihood of the injection = -77.4844
 
 
 Ok everything seems fine, let's move on to defining our jump PDF!
@@ -732,9 +735,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [3.783, 1.2]
-    Proposed Sample = [3.8961423  1.37733564]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 1.2757
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 1.2757
+    Proposed Sample = [4.20030013 0.97708543]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.5197
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.5197
 
 
 ### MCMC Algorithm
@@ -755,6 +758,9 @@ Ndim    = 2         # number of model dimensions
 
 # Initialize data arrays
 x_samples = np.zeros((Nsample, Ndim))
+
+# Initialize random number generator for U draws
+rng = np.random.default_rng()
 
 # Starting sample
 # --> (Pseudo-Code Step 1)
@@ -780,7 +786,7 @@ and
 
 ```python
 # LOOP: Samples
-for i in tqdm(range(1,Nsample)):
+for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
 
     # Current sample
     x_current = x_samples[i-1,:]
@@ -815,7 +821,7 @@ for i in tqdm(range(1,Nsample)):
     
         # Draw random number from Uniform Dist
         # --> (Pseudo-Code Step 4)
-        U   = np.random.uniform(0,1)
+        U   = rng.uniform(0,1)
         lnU = np.log(U)
 
         # Heart of the MCMC Algorithm: the acceptance criteria
@@ -828,7 +834,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:00<00:00, 3287.10it/s]
+    100%|██████████████████████████████| 199999/199999 [00:59<00:00, 3388.23it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -931,7 +937,7 @@ chain = Chain(samples = PD_samples_final,
 c.add_chain(chain)
 
 # Plot injections
-c.add_truth(Truth(location=dict(zip(param_labels, np.asarray(injection))), color='k'))
+c.add_truth(Truth(location=dict(zip(param_labels, np.asarray(injection))), color='k', marker='+', marker_size='600'))
 
 # Set parameter ranges/scales
 param_logscales = [param_labels[1]]
@@ -1067,10 +1073,10 @@ For the sake of replicability, let us set a random seed when generating the nois
 # --> this dataset has uncorrelated white noise
 
 # Setting a random seed so that you can replicate the graphs
-np.random.seed(42)
+rng_seed = np.random.default_rng(seed=42)
 
 sigma_n = 2
-noise   = np.random.normal(0, sigma_n, size=Nt)
+noise   = rng_seed.normal(0, sigma_n, size=Nt)
 ```
 
 
@@ -1164,7 +1170,7 @@ print(r"--> log-likelihood of the injection = {0:0.4f}".format(ln_like(injection
     Quick checks:
     --> log-prior of the injection      = -6.5807
     --> log-prior out of prior range    = -1.0000e+300
-    --> log-likelihood of the injection = -86.4097
+    --> log-likelihood of the injection = -77.4844
 
 
 Ok everything seems fine, let's move on to defining our jump PDF!
@@ -1236,9 +1242,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.783, 1.2]
-    Proposed Sample = [4.2131423  3.96033564 1.54249088]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.8952
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.8952
+    Proposed Sample = [4.30457785 4.00980307 1.20281811]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 1.2593
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 1.2593
 
 
 ### MCMC Algorithm
@@ -1260,6 +1266,9 @@ Ndim    = 3         # number of model dimensions
 # Initialize data arrays
 x_samples = np.zeros((Nsample, Ndim))
 
+# Initialize random number generator for U draws
+rng = np.random.default_rng()
+
 # Starting sample
 # --> (Pseudo-Code Step 1)
 x_samples[0] = [5.3, 13.4, 2.7]
@@ -1274,7 +1283,7 @@ After we propose a new jump, we add one additional step: the **"prior check."** 
 
 ```python
 # LOOP: Samples
-for i in tqdm(range(1,Nsample)):
+for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
 
     # Current sample
     x_current = x_samples[i-1,:]
@@ -1309,7 +1318,7 @@ for i in tqdm(range(1,Nsample)):
     
         # Draw random number from Uniform Dist
         # --> (Pseudo-Code Step 4)
-        U   = np.random.uniform(0,1)
+        U   = rng.uniform(0,1)
         lnU = np.log(U)
 
         # Heart of the MCMC Algorithm: the acceptance criteria
@@ -1322,7 +1331,7 @@ for i in tqdm(range(1,Nsample)):
             x_samples[i,:] = x_current
 ```
 
-    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 199999/199999 [01:12<00:00, 2770.11it/s]
+    100%|██████████████████████████████| 199999/199999 [01:08<00:00, 2900.50it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -1424,7 +1433,7 @@ chain = Chain(samples = PD_samples_final,
 c.add_chain(chain)
 
 # Plot injections
-c.add_truth(Truth(location=dict(zip(param_labels, np.asarray(injection))), color='k'))
+c.add_truth(Truth(location=dict(zip(param_labels, np.asarray(injection))), color='k', marker='+', marker_size='600'))
 
 # Set parameter ranges/scales
 param_logscales = [param_labels[2]]

@@ -4,7 +4,7 @@ To build an MCMC, we need to be able to draw random numbers... a lot.
 
 More specifically, we want to be able to choose specific probability distributions, and generate both random values (RVs) from those distributions, as well as the value of the probability density function (PDF) at those RVs.
 
-Two easy-to-use packages for this are [*NumPy*](https://numpy.org/doc/stable/reference/random/legacy.html) and [*SciPy*](https://docs.scipy.org/doc/scipy/reference/stats.html).  However, there are pros and cons to consider when making your choice.  Both packages let you draw random samples from defined PDFs very easily.  *NumPy* does it faster (see below).  However, *SciPy* also let's you compute the PDF values incredibly easily, and has many, many more useful features built into it as compared to *NumPy*.
+Two easy-to-use packages for this are [*NumPy*](https://numpy.org/doc/stable/reference/random/legacy.html) and [*SciPy*](https://docs.scipy.org/doc/scipy-1.16.2/reference/stats.html).  However, there are pros and cons to consider when making your choice.  Both packages let you draw random samples from defined PDFs very easily.  *NumPy* does it faster (see below).  However, *SciPy* also let's you compute the PDF values incredibly easily, and has many, many more useful features built into it as compared to *NumPy*.
 
 So for much greater ease of implementation benefits, we are going to stick to using *SciPy* in **The MCMC Cookbook**.  When you go to build your own MCMC, you could potentially speed up some of our computations if you switch back to NumPy for drawing your RVs.  You'll have to decide if it is worth it for you and your own application!
 
@@ -39,20 +39,22 @@ N = 1_000_000
 
 
 ```python
-start_time = time.time()      # Record the start time
+rng = np.random.default_rng()   # Initialize the "random number generator"
 
-for i in tqdm(range(N)):
-    np.random.multivariate_normal(mean, cov)
+start_time = time.time()        # Record the start time
 
-end_time = time.time()        # Record the end time
+for i in tqdm(range(N), bar_format='{l_bar}{bar:30}{r_bar}'):
+    rng.multivariate_normal(mean, cov)
+
+end_time = time.time()          # Record the end time
 
 elapsed_time = end_time - start_time
 print(f"The loop took {elapsed_time:.4f} seconds.")
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████████████████████████| 1000000/1000000 [00:25<00:00, 39689.82it/s]
+    100%|██████████████████████████████| 1000000/1000000 [00:24<00:00, 40840.64it/s]
 
-    The loop took 25.2077 seconds.
+    The loop took 24.5120 seconds.
 
 
     
@@ -64,7 +66,7 @@ print(f"The loop took {elapsed_time:.4f} seconds.")
 ```python
 start_time = time.time()      # Record the start time
 
-for i in tqdm(range(N)):
+for i in tqdm(range(N), bar_format='{l_bar}{bar:30}{r_bar}'):
     scipy.stats.multivariate_normal(mean, cov).rvs()
 
 end_time = time.time()        # Record the end time
@@ -73,9 +75,9 @@ elapsed_time = end_time - start_time
 print(f"The loop took {elapsed_time:.4f} seconds.")
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████████████████████████| 1000000/1000000 [01:14<00:00, 13452.91it/s]
+    100%|██████████████████████████████| 1000000/1000000 [01:16<00:00, 13138.43it/s]
 
-    The loop took 74.3342 seconds.
+    The loop took 76.1135 seconds.
 
 
     
