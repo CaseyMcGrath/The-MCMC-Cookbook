@@ -11,7 +11,7 @@ The jump proposal can be as simple or as complicated of a PDF as you want to def
 ```{margin}
 You may read papers where for a specific study, the investigators create their own "custom" MCMC.  Often this means that they will have create some sort of specialized mixture of different jump proposals that works well for sampling their specific posterior distribution.  If you are curious to see a real-world example of this, {cite:t}`CorbinCornish_2010` describe in their Section 3.3 of their work how they built a (parallel tempered) MCMC sampler that employed, "A combination of six proposal distributions."  They then briefly describe (in words) what each jump proposal was doing and why it was useful in their cocktail!
 ```
-Additionally, the jump proposal can really be a collection of *multiple* jump proposal PDFs.  Often times for more complicated problems, a single type of jump proposal won't be good enough for the efficiency we desire, so we will create a "cocktail" of multiple jump proposals that get used together.  More on this idea later - first, let's figure out how to define a general jump proposal!
+Additionally, the jump proposal can really be a collection of *multiple* jump proposal PDFs.  Often times for more complicated problems, a single type of jump proposal won't be good enough for the efficiency we desire, so we will create a "cocktail" of multiple jump proposals that get used together.  [More on this idea later](./multiple_jump_schemes/multiple_jump_schemes.md) - first, let's figure out how to define a general jump proposal!
 
 
 ## Forward and Reverse Jumps

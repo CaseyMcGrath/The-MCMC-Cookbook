@@ -5,13 +5,13 @@ Let's figure out how to construct some prior probability distributions!  Specifi
 1) Randomly generate numbers drawn from a defined probability density function (PDF),
 2) Calculate the PDF value at specified values.
 
-Fortunately for us, [*SciPy*](https://docs.scipy.org/doc/scipy/reference/stats.html) can do both of these things extremely easily, and they already have many, many defined PDFs that you might find useful!  Three common priors we will likely for our MCMCs are:
+Fortunately for us, [*SciPy*](https://docs.scipy.org/doc/scipy/reference/stats.html) can do both of these things extremely easily, and they already have many, many defined PDFs that you might find useful!  Three common priors we will likely use in our MCMCs are:
 
 - [Uniform distributions](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.uniform.html),
 - [Log-Uniform distributions](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.loguniform.html),
 - and [Normal distributions](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html).
 
-Let's come up with a way to build some priors that we can then use in our MCMC.
+So let's figure out a method to build priors that we can then use in our MCMCs.
 
 ## Prior Dictionary
 
