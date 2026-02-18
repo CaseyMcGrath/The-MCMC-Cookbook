@@ -10,7 +10,6 @@ As we create our MCMC recipes, we will add capabilities and functions depending 
 ```{tab-item} MCMC Techniques
 - standard MCMC
 - parallel tempering
-- rejection sampling
 ```
 
 ```{tab-item} Conveniences
@@ -22,10 +21,8 @@ As we create our MCMC recipes, we will add capabilities and functions depending 
 ```
 
 ```{tab-item} Jump Proposals
-- symmetric jumps
-    - Gaussian/Multivariate Normal
+- Gaussian/Multivariate Normal
 - prior jumps
-- block (gibbs) jumps
 - multiple jump schemes
 ```
 

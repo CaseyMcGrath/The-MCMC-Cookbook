@@ -11,7 +11,6 @@ Here are the ingredients that we are going to use in this MCMC:
 ```{tab-item} MCMC Techniques
 - [x] standard MCMC
 - [ ] parallel tempering
-- [ ] rejection sampling
 ```
 
 ```{tab-item} Conveniences
@@ -23,10 +22,8 @@ Here are the ingredients that we are going to use in this MCMC:
 ```
 
 ```{tab-item} Jump Proposals
-- [x] symmetric jumps
-    - [x] Gaussian/Multivariate Normal
+- [x] Gaussian/Multivariate Normal
 - [x] prior jumps
-- [ ] block (gibbs) jumps
 - [x] multiple jump schemes
 ```
 
