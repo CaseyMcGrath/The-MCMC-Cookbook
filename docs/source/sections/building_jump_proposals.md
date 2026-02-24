@@ -53,6 +53,26 @@ Here I am making a choice to have my **forward jump** return a `tuple` object.  
 
 The **reverse jump** only needs to return the value of the PDF of the current sample given the proposed sample (provided we give it as input both of those values).
 
+````{margin}
+Recalling our [earlier discussion about speed](./scipy_vs_numpy.md#speed-test-comparison) - here is an example of where we cannot instantiate the *SciPy* stats class *outside* of the function, because the proposed sample is a function of the current sample, and the current sample will change from iteration to iteration in our MCMC.  
+
+But we can still be as efficient as possible!  To show you another example of what *not* to do (something that I did do for quite a while, until I realized my unnecessary mistake), here is a version of the same function which will run slower:
+
+```python
+def jump_F_Gaussian(sample_current):
+    # standard deviation of the jump
+    std = 0.3
+    
+    # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
+    sample_proposed = scipy.stats.norm(loc=sample_current, scale=std).rvs()
+    pdf_value       = scipy.stats.norm(loc=sample_current, scale=std).pdf(sample_proposed)
+    
+    return sample_proposed, pdf_value
+```
+
+See why?  Because I'm instantiating the same probability density function *twice*, when really I only need to do it once!
+````
+
 
 ```python
 import scipy.stats
@@ -65,10 +85,13 @@ import scipy.stats
 def jump_F_Gaussian(sample_current):
     # standard deviation of the jump
     std = 0.3
+
+    # instantiate the probability density
+    probability_density = scipy.stats.norm(loc=sample_current, scale=std)
     
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
-    sample_proposed = scipy.stats.norm(loc=sample_current, scale=std).rvs()
-    pdf_value       = scipy.stats.norm(loc=sample_current, scale=std).pdf(sample_proposed)
+    sample_proposed = probability_density.rvs()
+    pdf_value       = probability_density.pdf(sample_proposed)
     
     return sample_proposed, pdf_value
 
@@ -79,8 +102,11 @@ def jump_R_Gaussian(sample_current, sample_proposed):
     # standard deviation of the jump
     std = 0.3
     
+    # instantiate the probability density
+    probability_density = scipy.stats.norm(loc=sample_proposed, scale=std)
+    
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
-    pdf_value = scipy.stats.norm(loc=sample_proposed, scale=std).pdf(sample_current)
+    pdf_value = probability_density.pdf(sample_current)
     
     return pdf_value
 ```
@@ -105,9 +131,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = 8.3600
-    Proposed Sample = 8.1677
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 1.0828
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 1.0828
+    Proposed Sample = 7.8796
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.3690
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.3690
 
 
 You should notice that no matter how many times you run the cell, actual value of the PDF for the forward and reverse jumps does not change, even though the proposed sample is different each time.
@@ -138,12 +164,15 @@ import numpy as np
 
 def jump_F_MultivariateNorm(sample_current):
     # Covariance matrix that set's each parameter's jump scale
-    Cov = np.array([[0.3, 0    ],
+    Cov = np.array([[0.3, 0   ],
                     [0,   0.5]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
-    sample_proposed = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).rvs()
-    pdf_value       = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).pdf(sample_proposed)
+    sample_proposed = probability_density.rvs()
+    pdf_value       = probability_density.pdf(sample_proposed)
     
     return sample_proposed, pdf_value
 
@@ -155,8 +184,11 @@ def jump_R_MultivariateNorm(sample_current, sample_proposed):
     Cov = np.array([[0.3, 0    ],
                     [0,   0.5]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
-    pdf_value = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov).pdf(sample_current)
+    pdf_value = probability_density.pdf(sample_current)
     
     return pdf_value
 ```
@@ -181,9 +213,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = 8.3600,  -2.3700, 
-    Proposed Sample = 9.1061,  -2.7247, 
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.1433
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.1433
+    Proposed Sample = 8.2494,  -2.7147, 
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.3575
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.3575
 
 
 You should notice that no matter how many times you run the cell, actual value of the PDF for the forward and reverse jumps does not change, even though the proposed sample is different each time.
