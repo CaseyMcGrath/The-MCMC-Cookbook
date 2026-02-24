@@ -67,7 +67,7 @@ sections/schematics/schematics
 sections/ingredients
 
 sections/progress_bar
-sections/numpy_v_scipy
+sections/scipy_vs_numpy
 sections/building_priors/building_priors
 sections/building_jump_proposals
 
