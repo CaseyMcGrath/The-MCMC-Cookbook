@@ -164,7 +164,7 @@ import numpy as np
 
 def jump_F_MultivariateNorm(sample_current):
     # Covariance matrix that set's each parameter's jump scale
-    Cov = np.array([[0.3, 0   ],
+    Cov = np.array([[0.3, 0  ],
                     [0,   0.5]])
     
     # instantiate the probability density
@@ -181,7 +181,7 @@ def jump_F_MultivariateNorm(sample_current):
 
 def jump_R_MultivariateNorm(sample_current, sample_proposed):
     # standard deviation of the jump
-    Cov = np.array([[0.3, 0    ],
+    Cov = np.array([[0.3, 0  ],
                     [0,   0.5]])
     
     # instantiate the probability density

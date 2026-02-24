@@ -215,9 +215,12 @@ def jump_F_MultivariateNorm(sample_current):
                     [0, 1e-3, 0   ],
                     [0, 0,    1e-3]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
-    sample_proposed = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).rvs()
-    pdf_value       = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).pdf(sample_proposed)
+    sample_proposed = probability_density.rvs()
+    pdf_value       = probability_density.pdf(sample_proposed)
     
     return sample_proposed, pdf_value
 
@@ -225,13 +228,16 @@ def jump_F_MultivariateNorm(sample_current):
 # The REVERSE jump proposal
 
 def jump_R_MultivariateNorm(sample_current, sample_proposed):
-    # Covariance matrix that set's each parameter's jump scale
+    # standard deviation of the jump
     Cov = np.array([[1, 0,    0   ],
                     [0, 1e-3, 0   ],
                     [0, 0,    1e-3]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
-    pdf_value = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov).pdf(sample_current)
+    pdf_value = probability_density.pdf(sample_current)
     
     return pdf_value
 ```
@@ -256,9 +262,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.7, 1.2]
-    Proposed Sample = [5.41751895 3.7400697  1.15936905]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 5.2319
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 5.2319
+    Proposed Sample = [3.89037559 3.67952214 1.1571866 ]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 20.1419
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 20.1419
 
 
 
@@ -304,8 +310,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.7, 1.2]
-    Proposed Sample = [4.08155879 2.19171123 1.30408251]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0004
+    Proposed Sample = [ 1.1042447  10.16892046  0.16164047]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0132
     PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.0005
 
 
@@ -503,7 +509,7 @@ for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
         counter_temp_swap[i-1,index1] = 0
 ```
 
-    100%|██████████████████████████████| 199999/199999 [04:54<00:00, 678.63it/s]
+    100%|██████████████████████████████| 199999/199999 [04:16<00:00, 780.41it/s]
 
 
 ```{margin}
@@ -651,7 +657,7 @@ Now that we have an idea of how long it took our sampler to burn-in, let's throw
 
 ```python
 # Discard (burn) samples
-burn = 20_000
+burn = 25_000
 
 # Final posterior samples
 # --> we will save two copies of the final samples: 

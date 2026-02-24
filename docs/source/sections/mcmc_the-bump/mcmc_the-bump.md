@@ -214,10 +214,13 @@ But it is **critical** that the standard deviation in both the forward and rever
 def jump_F_Gaussian(sample_current):
     # standard deviation of the jump
     std = 1
+
+    # instantiate the probability density
+    probability_density = scipy.stats.norm(loc=sample_current, scale=std)
     
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
-    sample_proposed = scipy.stats.norm(loc=sample_current, scale=std).rvs()
-    pdf_value       = scipy.stats.norm(loc=sample_current, scale=std).pdf(sample_proposed)
+    sample_proposed = probability_density.rvs()
+    pdf_value       = probability_density.pdf(sample_proposed)
     
     return sample_proposed, pdf_value
 
@@ -228,8 +231,11 @@ def jump_R_Gaussian(sample_current, sample_proposed):
     # standard deviation of the jump
     std = 1
     
+    # instantiate the probability density
+    probability_density = scipy.stats.norm(loc=sample_proposed, scale=std)
+    
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
-    pdf_value = scipy.stats.norm(loc=sample_proposed, scale=std).pdf(sample_current)
+    pdf_value = probability_density.pdf(sample_current)
     
     return pdf_value
 ```
@@ -254,9 +260,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = 3.7830
-    Proposed Sample = 3.1375
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.3239
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.3239
+    Proposed Sample = 2.2363
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.1206
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.1206
 
 
 ### MCMC Algorithm
@@ -279,7 +285,7 @@ rng = np.random.default_rng()
 
 # Starting sample
 # --> (Pseudo-Code Step 1)
-x_samples[0] = 13.4
+x_samples[0] = 10.4
 ```
 
 We can achieve the steps in our [MCMC schematic](../schematics/schematics.md#mcmc) with a **single `for` loop**.  This loop will range over the number of samples that we want to draw $N_\text{samples}$.
@@ -343,7 +349,7 @@ for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
             x_samples[i,:] = x_current
 ```
 
-    100%|██████████████████████████████| 199999/199999 [02:15<00:00, 1474.51it/s]
+    100%|██████████████████████████████| 199999/199999 [01:38<00:00, 2029.64it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -692,9 +698,12 @@ def jump_F_MultivariateNorm(sample_current):
     Cov = np.array([[0.1, 0  ],
                     [0,   0.1]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
-    sample_proposed = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).rvs()
-    pdf_value       = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).pdf(sample_proposed)
+    sample_proposed = probability_density.rvs()
+    pdf_value       = probability_density.pdf(sample_proposed)
     
     return sample_proposed, pdf_value
 
@@ -706,8 +715,11 @@ def jump_R_MultivariateNorm(sample_current, sample_proposed):
     Cov = np.array([[0.1, 0  ],
                     [0,   0.1]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
-    pdf_value = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov).pdf(sample_current)
+    pdf_value = probability_density.pdf(sample_current)
     
     return pdf_value
 ```
@@ -732,9 +744,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [3.783, 1.2]
-    Proposed Sample = [4.20030013 0.97708543]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.5197
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.5197
+    Proposed Sample = [3.740138   1.22500766]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 1.5721
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 1.5721
 
 
 ### MCMC Algorithm
@@ -761,7 +773,7 @@ rng = np.random.default_rng()
 
 # Starting sample
 # --> (Pseudo-Code Step 1)
-x_samples[0] = [13.4, 2.7]
+x_samples[0] = [10.4, 0.9]
 ```
 
 We can achieve the steps in our [MCMC schematic](../schematics/schematics.md#mcmc) with a **single `for` loop**.  This loop will range over the number of samples that we want to draw $N_\text{samples}$.
@@ -831,7 +843,7 @@ for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
             x_samples[i,:] = x_current
 ```
 
-    100%|██████████████████████████████| 199999/199999 [00:59<00:00, 3388.23it/s]
+    100%|██████████████████████████████| 199999/199999 [00:49<00:00, 4055.85it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!
@@ -901,7 +913,7 @@ Now that we have an idea of how long it took our sampler to burn-in, let's throw
 
 ```python
 # Discard (burn) samples
-burn = 40_000
+burn = 25_000
 
 # Final posterior samples
 # --> we will save two copies of the final samples: 
@@ -1194,13 +1206,16 @@ But it is **critical** that the standard deviation in both the forward and rever
 
 def jump_F_MultivariateNorm(sample_current):
     # Covariance matrix that set's each parameter's jump scale
-    Cov = np.array([[0.1, 0,   0   ],
-                    [0,   0.1, 0   ],
+    Cov = np.array([[0.1, 0,   0  ],
+                    [0,   0.1, 0  ],
                     [0,   0,   0.1]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
-    sample_proposed = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).rvs()
-    pdf_value       = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).pdf(sample_proposed)
+    sample_proposed = probability_density.rvs()
+    pdf_value       = probability_density.pdf(sample_proposed)
     
     return sample_proposed, pdf_value
 
@@ -1209,12 +1224,15 @@ def jump_F_MultivariateNorm(sample_current):
 
 def jump_R_MultivariateNorm(sample_current, sample_proposed):
     # standard deviation of the jump
-    Cov = np.array([[0.1, 0,   0   ],
-                    [0,   0.1, 0   ],
+    Cov = np.array([[0.1, 0,   0  ],
+                    [0,   0.1, 0  ],
                     [0,   0,   0.1]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
-    pdf_value = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov).pdf(sample_current)
+    pdf_value = probability_density.pdf(sample_current)
     
     return pdf_value
 ```
@@ -1239,9 +1257,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.783, 1.2]
-    Proposed Sample = [4.30457785 4.00980307 1.20281811]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 1.2593
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 1.2593
+    Proposed Sample = [3.97044573 3.66820898 1.21300704]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 1.7270
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 1.7270
 
 
 ### MCMC Algorithm
@@ -1268,7 +1286,7 @@ rng = np.random.default_rng()
 
 # Starting sample
 # --> (Pseudo-Code Step 1)
-x_samples[0] = [5.3, 13.4, 2.7]
+x_samples[0] = [5.3, 10.4, 0.9]
 ```
 
 We can achieve the steps in our [MCMC schematic](../schematics/schematics.md#mcmc) with a **single `for` loop**.  This loop will range over the number of samples that we want to draw $N_\text{samples}$.
@@ -1328,7 +1346,7 @@ for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
             x_samples[i,:] = x_current
 ```
 
-    100%|██████████████████████████████| 199999/199999 [01:08<00:00, 2900.50it/s]
+    100%|██████████████████████████████| 199999/199999 [00:59<00:00, 3376.61it/s]
 
 
 That's all there is to it!  The entire MCMC "black box" fits in the above code block.  Hopefully now that we have broken things down line-by-line, it isn't so daunting to understand.  We just cooked up a simple MCMC!

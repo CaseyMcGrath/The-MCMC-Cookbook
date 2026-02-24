@@ -214,13 +214,16 @@ I have picked a jump Covariance matrix here that I found seemed to work decently
 
 def jump_F_MultivariateNorm(sample_current):
     # Covariance matrix that set's each parameter's jump scale
-    Cov = np.array([[0.1, 0,   0,  ],
-                    [0,   0.1, 0,  ],
+    Cov = np.array([[0.1, 0,   0,    ],
+                    [0,   0.1, 0,    ],
                     [0,   0,   0.0005]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method
-    sample_proposed = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).rvs()
-    pdf_value       = scipy.stats.multivariate_normal(mean=np.array(sample_current), cov=Cov).pdf(sample_proposed)
+    sample_proposed = probability_density.rvs()
+    pdf_value       = probability_density.pdf(sample_proposed)
     
     return sample_proposed, pdf_value
 
@@ -229,12 +232,15 @@ def jump_F_MultivariateNorm(sample_current):
 
 def jump_R_MultivariateNorm(sample_current, sample_proposed):
     # standard deviation of the jump
-    Cov = np.array([[0.1, 0,   0,  ],
-                    [0,   0.1, 0,  ],
+    Cov = np.array([[0.1, 0,   0,    ],
+                    [0,   0.1, 0,    ],
                     [0,   0,   0.0005]])
     
+    # instantiate the probability density
+    probability_density = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov)
+
     # draw a new random sample using the .RVS() method, and calculate the PDF value using the .PDF() method    
-    pdf_value = scipy.stats.multivariate_normal(mean=np.array(sample_proposed), cov=Cov).pdf(sample_current)
+    pdf_value = probability_density.pdf(sample_current)
     
     return pdf_value
 ```
@@ -259,9 +265,9 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 ```
 
     Current Sample  = [4.1, 3.783, 1.2]
-    Proposed Sample = [4.07956731 3.12897009 1.16161469]
-    PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.7649
-    PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.7649
+    Proposed Sample = [4.02029979 3.6358142  1.22438544]
+    PDF value of Proposed sample given Current  sample (FORWARD jump) = 13.6194
+    PDF value of Current  sample given Proposed sample (REVERSE jump) = 13.6194
 
 
 ### MCMC Algorithm
@@ -354,7 +360,7 @@ for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
             x_samples[i,:] = x_current
 ```
 
-    100%|██████████████████████████████| 199999/199999 [01:15<00:00, 2636.11it/s]
+    100%|██████████████████████████████| 199999/199999 [01:05<00:00, 3057.24it/s]
 
 
 
@@ -446,7 +452,7 @@ Now that we have an idea of how long it took our sampler to burn-in, let's throw
 
 ```python
 # Discard (burn) samples
-burn = 20_000
+burn = 25_000
 
 # Final posterior samples
 # --> we will save two copies of the final samples: 
