@@ -60,31 +60,43 @@ Additionally, read through *A Practical Guide to MCMC Part 1: MCMC Basics* by {c
 
 ```{toctree}
 :maxdepth: 1
-:caption: Contents:
+:caption: Part 1:
 
 sections/mcmc_basics
 sections/schematics/schematics
 sections/ingredients
-
 sections/progress_bar
 sections/scipy_vs_numpy
 sections/building_priors/building_priors
 sections/building_jump_proposals
-
 sections/toy_problems/toy_problems
 sections/normalizations
+```
+
+```{toctree}
+:maxdepth: 1
+:caption: Part 2:
 
 sections/mcmc_the-bump/mcmc_the-bump
 sections/tracking_in-model_jumps/tracking_in-model_jumps
 sections/cyclic_parameters
-
 sections/mcmc_the-wave/mcmc_the-wave
 sections/multiple_jump_schemes/multiple_jump_schemes
 sections/mcmc_multi-bump/mcmc_multi-bump
+```
+
+```{toctree}
+:maxdepth: 1
+:caption: Part 3:
 
 sections/ptmcmc_basics
 sections/tracking_temp_swap_ratios/tracking_temp_swap_ratios
 sections/ptmcmc_multi-bump/ptmcmc_multi-bump
+```
+
+```{toctree}
+:maxdepth: 1
+:caption: See Also:
 
 sections/references
 ```
