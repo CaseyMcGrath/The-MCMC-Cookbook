@@ -182,7 +182,10 @@ def ln_like(param, data, sigma_n, times):
     return (- (data - M)**2 / (2*sigma_n**2)).sum()
 ```
 
-**Sanity Check:** Let's test the output of our prior and likelihood functions to make sure that they work the way we expect:
+````{admonition} Sanity Check
+:class: dropdown
+
+Let's test the output of our prior and likelihood functions to make sure that they work the way we expect.
 
 
 ```python
@@ -199,6 +202,8 @@ print(r"--> log-likelihood of the injection         = {0:0.4f}".format(ln_like(i
 
 
 Ok everything seems fine, let's move on to defining our jump PDF!
+
+````
 
 ### Jump Proposal
 
@@ -245,7 +250,10 @@ def jump_R_MultivariateNorm(sample_current, sample_proposed):
     return pdf_value
 ```
 
-**Sanity Check:** Let's test out our two new functions and verify that they are indeed symmetric!
+````{admonition} Sanity Check
+:class: dropdown
+
+Let's test out our two new functions and verify that they are indeed symmetric!
 
 
 ```python
@@ -269,6 +277,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
     PDF value of Proposed sample given Current  sample (FORWARD jump) = 13.6194
     PDF value of Current  sample given Proposed sample (REVERSE jump) = 13.6194
 
+
+````
 
 ### MCMC Algorithm
 
@@ -417,7 +427,7 @@ plt.show()
 
 
     
-![png](output_33_0.png)
+![png](output_37_0.png)
     
 
 
@@ -443,7 +453,7 @@ plt.show()
 
 
     
-![png](output_34_0.png)
+![png](output_38_0.png)
     
 
 
@@ -496,7 +506,7 @@ c.plotter.plot();
 
 
     
-![png](output_38_0.png)
+![png](output_42_0.png)
     
 
 
@@ -539,7 +549,7 @@ plt.show()
 
 
     
-![png](output_40_0.png)
+![png](output_44_0.png)
     
 
 

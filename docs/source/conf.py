@@ -25,6 +25,7 @@ extensions = [
     #"myst_nb",                # https://myst-nb.readthedocs.io/en/latest/quickstart.html 
     "sphinx_copybutton",      # https://sphinx-copybutton.readthedocs.io/en/latest/
     "sphinx_favicon",         # https://sphinx-favicon.readthedocs.io/en/stable/quickstart.html#quickstart 
+    "sphinx_togglebutton",    # https://sphinx-togglebutton.readthedocs.io/en/latest/
 ]
 
 myst_enable_extensions = ["dollarmath", "amsmath", "tasklist"]  # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html

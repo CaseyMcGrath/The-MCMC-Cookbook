@@ -180,15 +180,16 @@ def ln_like(param, data, sigma_n, times):
     return (- (data - M)**2 / (2*sigma_n**2)).sum()
 ```
 
-**Sanity Check:** Let's test the output of our prior and likelihood functions to make sure that they work the way we expect:
+````{admonition} Sanity Check
+:class: dropdown
+
+Let's test the output of our prior and likelihood functions to make sure that they work the way we expect.
 
 ```{hint}
 Notice in particular the difference in the values of the log-likelihood at injection 1 vs. injection 2.  The actual value of the log-likelihood at the first bump (injection 1) is smaller than at the second bump (injection 2).  This already should help to build our intuition for what might happen when we run the MCMC algorithm.  Because the second bump has more support in the log-likelihood, our MCMC will likely find *more* support in the final posterior for the second bump compared to the first bump.
 ```
 
-```{margin}
 Note, our log-prior and log-likelihood functions as we have defined them here are only equiped to take as input one set of parameters for the bump model at a time.  So for our quick check here we are looking at the values of the log-prior/log-likelihood evaluated at each individual injection.
-```
 
 
 ```python
@@ -209,6 +210,8 @@ print(r"--> log-likelihood of injection 2 = {0:0.4f}".format(ln_like(injection[1
 
 
 Ok everything seems fine, let's move on to defining our jump PDF!
+
+````
 
 ### Jump Proposal
 
@@ -257,7 +260,10 @@ def jump_R_MultivariateNorm(sample_current, sample_proposed):
     return pdf_value
 ```
 
-**Sanity Check:** Let's test out our two new functions and verify that they are indeed symmetric!
+````{admonition} Sanity Check
+:class: dropdown
+
+Let's test out our two new functions and verify that they are indeed symmetric!
 
 
 ```python
@@ -282,6 +288,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
     PDF value of Current  sample given Proposed sample (REVERSE jump) = 19.1333
 
 
+````
+
 
 ```python
 # The FORWARD jump proposal
@@ -305,7 +313,10 @@ def jump_R_prior(sample_current, sample_proposed):
     return pdf_value
 ```
 
-**Sanity Check:** Let's test out our two new functions.  They should be *non*-symmetric.
+````{admonition} Sanity Check
+:class: dropdown
+
+Let's test out our two new functions.  They should be *non*-symmetric.
 
 
 ```python
@@ -329,6 +340,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
     PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0111
     PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.0005
 
+
+````
 
 ```{margin}
 In order to be able to randomly select (at a specified rate) which jump we use at every iteration in the MCMC, we need our ["selection tool"](../multiple_jump_schemes/multiple_jump_schemes.md#selection-tool).
@@ -529,7 +542,7 @@ plt.show()
 
 
     
-![png](output_41_0.png)
+![png](output_47_0.png)
     
 
 
@@ -555,7 +568,7 @@ plt.show()
 
 
     
-![png](output_42_0.png)
+![png](output_48_0.png)
     
 
 
@@ -616,7 +629,7 @@ c.plotter.plot();
 
 
     
-![png](output_46_0.png)
+![png](output_52_0.png)
     
 
 
@@ -659,7 +672,7 @@ plt.show()
 
 
     
-![png](output_48_0.png)
+![png](output_54_0.png)
     
 
 

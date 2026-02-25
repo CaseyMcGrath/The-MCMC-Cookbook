@@ -175,7 +175,10 @@ def ln_like(param, data, sigma_n, times):
     return (- (data - M)**2 / (2*sigma_n**2)).sum()
 ```
 
-**Sanity Check:** Let's test the output of our prior and likelihood functions to make sure that they work the way we expect:
+````{admonition} Sanity Check
+:class: dropdown
+
+Let's test the output of our prior and likelihood functions to make sure that they work the way we expect.
 
 
 ```python
@@ -196,6 +199,8 @@ print(r"--> log-likelihood of injection 2 = {0:0.4f}".format(ln_like(injection[1
 
 
 Ok everything seems fine, let's move on to defining our jump PDF!
+
+````
 
 ### Jump Proposal
 
@@ -242,7 +247,10 @@ def jump_R_MultivariateNorm(sample_current, sample_proposed):
     return pdf_value
 ```
 
-**Sanity Check:** Let's test out our two new functions and verify that they are indeed symmetric!
+````{admonition} Sanity Check
+:class: dropdown
+
+Let's test out our two new functions and verify that they are indeed symmetric!
 
 
 ```python
@@ -267,6 +275,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
     PDF value of Current  sample given Proposed sample (REVERSE jump) = 20.1419
 
 
+````
+
 
 ```python
 # The FORWARD jump proposal
@@ -290,7 +300,10 @@ def jump_R_prior(sample_current, sample_proposed):
     return pdf_value
 ```
 
-**Sanity Check:** Let's test out our two new functions.  They should be *non*-symmetric.
+````{admonition} Sanity Check
+:class: dropdown
+
+Let's test out our two new functions.  They should be *non*-symmetric.
 
 
 ```python
@@ -314,6 +327,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
     PDF value of Proposed sample given Current  sample (FORWARD jump) = 0.0132
     PDF value of Current  sample given Proposed sample (REVERSE jump) = 0.0005
 
+
+````
 
 
 ```python
@@ -587,7 +602,7 @@ plt.show()
 
 
     
-![png](output_42_0.png)
+![png](output_48_0.png)
     
 
 
@@ -613,7 +628,7 @@ plt.show()
 
 
     
-![png](output_43_0.png)
+![png](output_49_0.png)
     
 
 
@@ -648,7 +663,7 @@ plt.show()
 
 
     
-![png](output_44_0.png)
+![png](output_50_0.png)
     
 
 
@@ -703,7 +718,7 @@ c.plotter.plot();
 
 
     
-![png](output_48_0.png)
+![png](output_54_0.png)
     
 
 
@@ -746,7 +761,7 @@ plt.show()
 
 
     
-![png](output_50_0.png)
+![png](output_56_0.png)
     
 
 
