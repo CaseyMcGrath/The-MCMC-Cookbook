@@ -769,7 +769,7 @@ So how does this compare to our [regular MCMC results](../mcmc_multi-bump/mcmc_m
 
 The in-model jump tracking diagnostic plots show the same thing, so both samplers are proposing jumps and accepting them at the same rate (which should make sense, because we did not change the jump cocktail being used between the two samplers!).  The addition of the temperature swap tracking plot let's us see how efficient our sampler is at making temperature swaps.
 
-The final posteriors don't change too much, but intriguingly, now the second bump shows more support than the first!  This aligns more with the [**Hint** we mentioned previously](../mcmc_multi-bump/mcmc_multi-bump.md#prior-and-likelihood), that because the *likelihood* function supports the second bump more than the first that we might expect the posterior to do the same.  But overall, because the burn-in plot seems to show more evenly distributed jumps in the PTMCMC results, I personally would trust the PTMCMC posterior more than the MCMC one.
+The final posteriors don't change too much, but intriguingly, now the second bump shows more support than the first!  This aligns more with the [**Hint** in our **Sanity Check** that we mentioned previously](#hint-lnlike_inj1vinj2), that because the *likelihood* function supports the second bump more than the first that we might expect the posterior to do the same.  But overall, because the burn-in plot seems to show more evenly distributed jumps in the PTMCMC results, I personally would trust the PTMCMC posterior more than the MCMC one.
 
 And lastly, like the posterior plots suggest, the two sets of inference plots look about the same.
 

@@ -182,6 +182,7 @@ def ln_like(param, data, sigma_n, times):
 
 ````{admonition} Sanity Check
 :class: dropdown
+:name: hint-lnlike_inj1vinj2
 
 Let's test the output of our prior and likelihood functions to make sure that they work the way we expect.
 
@@ -678,11 +679,11 @@ plt.show()
 
 So let's discuss what happened here.  We have a multi-modal problem, and for this particular example, our MCMC algorithm managed to find both of the modes.  
 
-Interestingly, thinking about the [**Hint** we mentioned above](#prior-and-likelihood), the sampler actually found more support here at the first mode (we can see that the peak in $t_0$ is taller for the first mode, suggesting a higher probability density around that point).  Perhaps if we run this sampler for more iterations, the second bump would grow taller?  Let's keep this in the back of our minds and we will revisit this after we've developed a parallel tempered MCMC!
+Interestingly, thinking about the [**Hint** in our **Sanity Check** mentioned above](#hint-lnlike_inj1vinj2), the sampler actually found more support here at the first mode (we can see that the peak in $t_0$ is taller for the first mode, suggesting a higher probability density around that point).  Perhaps if we run this sampler for more iterations, the second bump would grow taller?  Let's keep this in the back of our minds and we will revisit this after we've developed a parallel tempered MCMC!
 
 ```{admonition} Homework!
 
 Try playing around with this problem a little on your own and see if you can test the limitations of this sampler.  For example, try changing the ratio of the rates that we are using to specify the two jump schemes that we have employed.  What happens if you make prior jumps more often?
 
-Additionally, try adjusting the values of the injected parameters themselves!  Try injecting two identical bumps.  Try injecting two bumps whose log-likelihood values have a greater difference (refer back to the [**Hint** mentioned above](#prior-and-likelihood)), and see what it does to the efficiency of the sampler.  Try injecting three or four bumps, or just a single bump!
+Additionally, try adjusting the values of the injected parameters themselves!  Try injecting two identical bumps.  Try injecting two bumps whose log-likelihood values have a greater difference, and see what it does to the efficiency of the sampler.  Try injecting three or four bumps, or just a single bump!
 ```
