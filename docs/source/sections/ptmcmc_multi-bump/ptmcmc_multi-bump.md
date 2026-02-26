@@ -233,7 +233,7 @@ def jump_F_MultivariateNorm(sample_current):
 # The REVERSE jump proposal
 
 def jump_R_MultivariateNorm(sample_current, sample_proposed):
-    # standard deviation of the jump
+    # Covariance matrix that set's each parameter's jump scale
     Cov = np.array([[1, 0,    0   ],
                     [0, 1e-3, 0   ],
                     [0, 0,    1e-3]])
@@ -350,6 +350,9 @@ def choose(items, rates):
 
 
 ```python
+# Jump Proposal Cocktail
+# --> Select which jump schemes to use and their (fractional) occurance rate
+
 jump_schemes      = [[jump_F_MultivariateNorm, jump_R_MultivariateNorm], 
                      [jump_F_prior,            jump_R_prior   ]]
 

@@ -247,7 +247,7 @@ def jump_F_MultivariateNorm(sample_current):
 # The REVERSE jump proposal
 
 def jump_R_MultivariateNorm(sample_current, sample_proposed):
-    # standard deviation of the jump
+    # Covariance matrix that set's each parameter's jump scale
     Cov = np.array([[1, 0,    0   ],
                     [0, 1e-3, 0   ],
                     [0, 0,    1e-3]])
