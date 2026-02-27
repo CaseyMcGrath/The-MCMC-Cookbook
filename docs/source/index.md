@@ -3,7 +3,7 @@
 
 ## Recipes for Crafting MCMCs
 
-<img src="./_static/MCMC_falling.svg" alt="Description" style="background-color: transparent;" align="right"/>
+<img src="./_static/MCMC_falling.svg" alt="The letters M C M C falling down the page" style="background-color: transparent;" align="right"/>
 
 When I first began my journey into the world of Markov Chain Monte Carlo (MCMC) samplers (in graduate school), I used a pre-built sampler.  I installed it and learned how to use it through a combination of practice on toy problems and reading through the documentation.  And then I tried to use it to solve the very specific problem for my research.  I suspect that many people begin their own MCMC journeys in a similar way.
 
@@ -28,7 +28,7 @@ My background is in physics and mathematics.  Most of what I have learned about 
 
 ## Goals of The MCMC Cookbook
 
-<img src="./_static/Cookbook.svg" height=250 alt="Description" style="background-color: transparent;" align="right"/>
+<img src="./_static/Cookbook.svg" height=250 alt="Book with 'Cook Book' written on the cover" style="background-color: transparent;" align="right"/>
 
 And the main goals of **The MCMC Cookbook** are to:
 
