@@ -23,15 +23,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="2.0000001"
-     inkscape:cx="274.99999"
-     inkscape:cy="273.24999"
+     inkscape:zoom="2.8284273"
+     inkscape:cx="369.10972"
+     inkscape:cy="385.1964"
      inkscape:window-width="2560"
      inkscape:window-height="1377"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="g4" />
   <defs
      id="defs1">
     <inkscape:path-effect
@@ -325,8 +325,13 @@
       <path
          id="path6"
          style="fill:#fc9e62;fill-opacity:1;stroke-width:0.800001;stroke-linecap:round;stroke-linejoin:round"
-         d="m 132.25854,97.050056 c 0.19465,2.230897 -8.39491,0.179623 -18.62142,0.07472 -3.37736,-0.03467 -3.944,4.29e-4 -5.98805,0.204194 -3.36029,0.334975 -6.69003,1.10608 -9.23618,1.841938 -4.30255,1.243472 -7.04943,2.461382 -7.14917,1.318362 -0.19464,-2.230897 12.00638,-4.979813 22.19473,-5.868855 10.18832,-0.889041 18.60543,0.198747 18.80009,2.429645 z"
-         sodipodi:nodetypes="sssssss" />
+         d="m 133.80154,97.963516 c -2.55594,1.571014 -9.22457,0.806275 -20.92069,0.640094 -3.86269,-0.05491 -4.51089,-0.0093 -6.84933,0.258918 -3.84426,0.440861 -7.687924,1.036754 -10.602196,2.017252 -4.924613,1.65691 -8.083575,1.63876 -8.591183,0.89934 -1.697976,-2.473396 14.143539,-5.788632 25.798909,-6.955535 11.65534,-1.166901 26.34301,-0.04306 23.78706,1.527962 z"
+         sodipodi:nodetypes="ssssssss" />
+      <path
+         style="fill:#fc9e62;stroke-width:0.3;stroke-linecap:round;stroke-linejoin:round"
+         d="m 144.78865,119.00853 c 2.0789,-0.21634 5.73383,-1.98962 4.85134,-3.35877 -0.97721,-1.51612 -4.80363,-2.68557 -5.55625,-4.00182 -0.7917,-1.3846 4.31465,-4.43114 0.82683,-4.20026 -3.71285,0.24578 -6.65382,2.99965 -6.48229,5.68854 0.37466,5.873 3.54424,6.16538 6.36037,5.87231 z"
+         id="path3"
+         sodipodi:nodetypes="ssssss" />
       <path
          id="path6-2"
          style="fill:#fc9e62;fill-opacity:1;stroke-width:0.800001;stroke-linecap:round;stroke-linejoin:round"
