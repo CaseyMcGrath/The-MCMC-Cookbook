@@ -376,7 +376,7 @@ So in this example, we are going to have our MCMC algorithm employ a Multivariat
 # --> Select which jump schemes to use and their (fractional) occurance rate
 
 jump_schemes      = [[jump_F_MultivariateNorm, jump_R_MultivariateNorm], 
-                     [jump_F_prior,            jump_R_prior   ]]
+                     [jump_F_prior,            jump_R_prior           ]]
 
 jump_scheme_rates = [0.9,
                      0.1]
