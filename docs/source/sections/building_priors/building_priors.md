@@ -26,7 +26,7 @@ Personally, I'm going to choose to build my MCMC priors using a dictionary struc
 
 
 ```python
-# Define a dictionary to store the priors for 3 different parameters
+# Define a dictionary to store the priors for 3 different parameters:
 
 prior = {
          0: scipy.stats.uniform(loc=3, scale=7),    # loc < x < loc + scale
@@ -98,6 +98,9 @@ def ln_prior(params):
         return np.log(prior0 * prior1 * prior2)
 ```
 
+````{admonition} Tests
+:class: dropdown
+
 Here are some examples of our function in action:
 
 
@@ -112,6 +115,8 @@ print("Log-Prior of Parameter Samples 2: ", ln_prior(parameter_test2))
     Log-Prior of Parameter Samples 1:  -2.8094432150738418
     Log-Prior of Parameter Samples 2:  -1e+300
 
+
+````
 
 ## Joint Prior Normalization
 

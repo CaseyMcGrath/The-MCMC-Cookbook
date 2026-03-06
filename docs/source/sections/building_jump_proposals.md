@@ -111,6 +111,9 @@ def jump_R_Gaussian(sample_current, sample_proposed):
     return pdf_value
 ```
 
+````{admonition} Tests
+:class: dropdown
+
 Let's test out our two new functions on a little example!  Try copying this code and run the following cell multiple times - what do you notice?
 
 
@@ -137,6 +140,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 
 
 You should notice that no matter how many times you run the cell, actual value of the PDF for the forward and reverse jumps does not change, even though the proposed sample is different each time.
+
+````
 
 ## Multivariate Normal Jumps
 
@@ -193,6 +198,9 @@ def jump_R_MultivariateNorm(sample_current, sample_proposed):
     return pdf_value
 ```
 
+````{admonition} Tests
+:class: dropdown
+
 Let's test out our two new functions on a little example!  Try copying this code and run the following cell multiple times - what do you notice?
 
 
@@ -219,6 +227,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 
 
 You should notice that no matter how many times you run the cell, actual value of the PDF for the forward and reverse jumps does not change, even though the proposed sample is different each time.
+
+````
 
 ## Symmetric Jump Proposals
 
@@ -305,6 +315,9 @@ As mentioned above, the forward jump doesn't actually (functionally) depend on t
 The answer is - you don't have to!  I am 'future proofing' things a little here - trying to make it so that all of the jump proposals that we define here are structurally set up in the exact same way.  This will make our lives easier when we start to build our MCMC algorithm such that it uses *multiple* jump schemes, not just one!
 ```
 
+````{admonition} Tests
+:class: dropdown
+
 Let's test out our two new functions on a little example!  Try copying this code and run the following cell multiple times - what do you notice?
 
 
@@ -331,6 +344,8 @@ print("PDF value of Current  sample given Proposed sample (REVERSE jump) = {0:0.
 
 
 Unlike with the symmetric jump proposals, now you should notice that the forward and reverse jumps in this example end up having different PDF values every time you generate a new proposed sample!
+
+````
 
 > So is the prior jump symmetric?  Only if the problem/example we are considering has symmetric priors *for every parameter*.  Otherwise, if any of the parameters have a non-symmetric prior, then the prior jump proposal is non-symmetric! 
 
