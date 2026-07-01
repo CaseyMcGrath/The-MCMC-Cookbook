@@ -480,7 +480,7 @@ for i in tqdm(range(1,Nsample), bar_format='{l_bar}{bar:30}{r_bar}'):
     
             # Heart of the MCMC Algorithm: the acceptance criteria
             # --> (MCMC Pseudo-Code Step 5)
-            # --> (PT Pseudo-Code Step 1)
+            # --> (PT Pseudo-Code Step 2)
             if (lnprior_proposed - lnprior_current) + (lnlike_proposed - lnlike_current)/T + (lnjump_current - lnjump_proposed) > lnU:
                 # accept the proposed sample
                 x_samples[i,j,:] = x_proposed
