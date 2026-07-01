@@ -88,15 +88,14 @@ We can actually just keep all of the same steps we wrote down before for our [MC
 2. Draw a proposed parameter sample $\vec{x}_{i+1}$ based on the current sample $\vec{x}_{i}$.  This will be done through our jump proposal $J\left(\vec{x}_{i+1} | \vec{x}_{i} \right)$.
 3. Now use the proposed parameter sample $\vec{x}_{i+1}$ and the current parameter sample $\vec{x}_{i}$ to calculate all of the ratios and terms found in the left-hand side of the acceptance ratio equation {eq}`acceptance_ratio_code`.
 4. Draw a random number from the Uniform distribution to give the right-hand side of the acceptance ratio equation {eq}`acceptance_ratio_code`.
-5. Compare the two final numbers from steps 3. and 4. to decide whether or not to keep or reject the new proposed sample value.
+5. Compare the two final numbers from steps 3 and 4 to decide whether or not to keep or reject the new proposed sample value.  Modified by step 2 of the Parallel Tempering pseudo-code.
 
 **Parallel Tempering**
 1. Create a list of the desired temperatures for each MCMC copy, with $T_0 = 1$.
-2. At each iteration, loop all of the MCMC steps, but with with tempered likelihoods.
+2. At each iteration, loop all of the MCMC steps, but with with tempered likelihoods.  Modifies step 5 of the MCMC pseudo-code.
 3. Draw a random number from the Uniform distribution to give the right-hand side of the temperature acceptance ratio equation {eq}`temperature_acceptance_ratio_code`.
-4. Select two temperatures and their current parameter samples, to calculate the ratio in the left-hand side of the temperature acceptance ratio equation {eq}`temperature_acceptance_ratio`.
-5. Compare the two final numbers from steps 2. and 3. to decide whether or not the temperatures swap parameter values.
-
+4. Select two temperatures and their current parameter samples, to calculate the ratio in the left-hand side of the temperature acceptance ratio equation {eq}`temperature_acceptance_ratio_code`.
+5. Compare the two final numbers from steps 3 and 4 to decide whether or not the temperatures swap parameter values.
 ```
 
 [Parallel Tempered MCMC (PTMCMC)](./schematics/schematics.md#parallel-tempered-mcmc-ptmcmc) shows a **visual schematic** of this general structure.  As always, we just repeat this process for a huge number of iterations until we believe that we have samples that accurately represent our posterior distribution!
